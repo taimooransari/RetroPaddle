@@ -13,6 +13,25 @@ class Paddle : public Object
 
 };
 
+
+class FastPaddle: public Paddle{
+    
+};
+
+class FastPaddle: public Paddle{
+    
+};
+
+class SpeedPaddle: public Paddle{
+    
+};
+
+class LongPaddle: public Paddle{
+    
+};
+
+
+
 class Ball : public Ball
 {
     
