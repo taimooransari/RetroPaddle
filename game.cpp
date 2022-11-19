@@ -1,5 +1,5 @@
-#include "game.hpp"
-#include "drawing.hpp"
+#include "./headers/game.hpp"
+#include "./headers/drawing.hpp"
 SDL_Renderer* Drawing::gRenderer = NULL;
 
 bool Game::init()
