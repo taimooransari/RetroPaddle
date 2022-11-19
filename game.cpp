@@ -64,7 +64,7 @@ bool Game::loadMedia()
 	bool success = true;
 	
 	
-    gTexture = loadTexture("pong.png");
+    gTexture = loadTexture("./assets/pong.png");
 	if( gTexture==NULL)
     {
         printf("Unable to run due to error: %s\n",SDL_GetError());
@@ -137,7 +137,7 @@ void Game::run( )
 				SDL_GetMouseState(&xMouse,&yMouse);
 				if(xMouse>220 && xMouse<500 && yMouse>210 && yMouse<270){
                     quit = false;
-                    gTexture = loadTexture("pong2.png");
+                    gTexture = loadTexture("./assets/pong2.png");
                 //tried to implement switching between multiple screens but this code is
                 // skipping the screens so i'll keep working on it
                 //     if(e.type == SDL_MOUSEBUTTONDOWN){
@@ -154,7 +154,7 @@ void Game::run( )
                 }
                 else if(xMouse>220 && xMouse<500 && yMouse>290 && yMouse<350){
                     quit = false;
-                    gTexture = loadTexture("instructions.png");
+                    gTexture = loadTexture("./assets/instructions.png");
                     
                 }
 			}
