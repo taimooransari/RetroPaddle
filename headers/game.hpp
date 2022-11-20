@@ -5,7 +5,7 @@
 #include <string>
 #include <stdlib.h>
 #include <time.h>
-#include <vectors>
+#include <vector>
 
 class Game{
     //Screen dimension constants
