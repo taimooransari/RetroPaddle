@@ -33,6 +33,7 @@ public:
 	bool hasKeyboardFocus();
 	bool isMinimized();
 	bool isShown();
+	SDL_Window *getWin(){return mWindow};
 
 private:
 	// Window data

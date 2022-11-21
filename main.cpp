@@ -38,7 +38,12 @@ void close();
 
 // int TOTAL_WINDOWS = 3;
 LWindow gWindows[3];
+
 // vector<LWindow> gWindows;
+
+
+
+// --------------------------------------
 
 bool init()
 {
@@ -100,6 +105,41 @@ int main(int argc, char *args[])
             gWindows[i].init();
         }
 
+
+
+
+Uint32 render_flags = SDL_RENDERER_ACCELERATED;
+
+SDL_Renderer *rend = SDL_CreateRenderer(gWindows[0].getWin(), -1, render_flags);
+
+SDL_Surface *surface;
+
+surface = IMG_Load("./assets/paddles.png");
+
+SDL_Texture *tex = SDL_CreateTextureFromSurface(rend, surface);
+SDL_Rect dest;
+SDL_QueryTexture(tex, NULL, NULL, &dest.w, &dest.h);
+dest.w /= 6;
+dest.h /= 6;
+
+dest.x = 0;
+dest.y = 0;
+SDL_FreeSurface(surface);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // Main loop flag
         bool quit = false;
 
@@ -140,7 +180,7 @@ int main(int argc, char *args[])
                     case SDLK_3:
                         gWindows[2].focus();
                         break;
-                                       }
+                    }
                 }
             }
 
