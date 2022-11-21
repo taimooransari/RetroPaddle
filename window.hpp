@@ -33,12 +33,17 @@ public:
 	bool hasKeyboardFocus();
 	bool isMinimized();
 	bool isShown();
-	SDL_Window *getWin(){return mWindow};
+
+	
+    bool loadMedia();
+    SDL_Texture* loadTexture( std::string path );
+	SDL_Renderer *getWin() { return mRenderer; };
 
 private:
 	// Window data
 	SDL_Window *mWindow;
 	SDL_Renderer *mRenderer;
+    
 	int mWindowID;
 
 	// Window dimensions

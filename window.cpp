@@ -1,18 +1,12 @@
 #include "window.hpp"
-
+#include "./headers/drawing.hpp"
 #include <SDL.h>
+#include <SDL_image.h>
 #include <stdio.h>
 #include <string>
 #include <sstream>
-
-// // Starts up SDL and creates window
-// bool init();
-
-// // Frees media and shuts down SDL
-// void close();
-
-// // Our custom windows
-// LWindow gWindows[7];
+#include <iostream>
+using namespace std;
 
 const int SCREEN_WIDTH = 960;
 const int SCREEN_HEIGHT = 720;
@@ -34,12 +28,55 @@ LWindow::LWindow()
     mHeight = 0;
 }
 
+
+SDL_Texture *LWindow::loadTexture(std::string path)
+{
+    // The final texture
+    SDL_Texture *newTexture = NULL;
+
+    // Load image at specified path
+    SDL_Surface *loadedSurface = IMG_Load(path.c_str());
+    if (loadedSurface == NULL)
+    {
+        printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+    }
+    else
+    {
+
+        cout << "TEXTURE LOADED"
+             << "----" << mWindowID << endl;
+        // Create texture from surface pixels
+        newTexture = SDL_CreateTextureFromSurface(mRenderer, loadedSurface);
+        if (newTexture == NULL)
+        {
+            printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+        }
+        else
+        {
+
+            // int width = newTexture->w;
+            // int height = newTexture->h;
+
+            SDL_Rect textRect = {100, 100, 100, 100};
+
+            SDL_RenderCopy(mRenderer, newTexture, 0, &textRect);
+        }
+
+        // Get rid of old loaded surface
+        // SDL_FreeSurface(loadedSurface);
+    }
+
+    return newTexture;
+}
+
 bool LWindow::init()
 {
     // Create window
     mWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (mWindow != NULL)
     {
+
+        // ====================
         mMouseFocus = true;
         mKeyboardFocus = true;
         mWidth = SCREEN_WIDTH;
@@ -227,45 +264,3 @@ bool LWindow::isShown()
 {
     return mShown;
 }
-
-// bool init()
-// {
-// 	// Initialization flag
-// 	bool success = true;
-
-// 	// Initialize SDL
-// 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-// 	{
-// 		printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
-// 		success = false;
-// 	}
-// 	else
-// 	{
-// 		// Set texture filtering to linear
-// 		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
-// 		{
-// 			printf("Warning: Linear texture filtering not enabled!");
-// 		}
-
-// 		// Create window
-// 		if (!gWindows[0].init())
-// 		{
-// 			printf("Window 0 could not be created!\n");
-// 			success = false;
-// 		}
-// 	}
-
-// 	return success;
-// }
-
-// void close()
-// {
-// 	// Destroy windows
-// 	for (int i = 0; i < TOTAL_WINDOWS; ++i)
-// 	{
-// 		gWindows[i].free();
-// 	}
-
-// 	// Quit SDL subsystems
-// 	SDL_Quit();
-// }

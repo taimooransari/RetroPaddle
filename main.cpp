@@ -1,11 +1,10 @@
 // #include "./headers/game.hpp"
 #include "window.hpp"
 #include <SDL.h>
+#include <SDL_image.h>
 #include <stdio.h>
 #include <string>
 #include <sstream>
-#include <vector>
-
 using namespace std;
 // int main(int argc, char *argv[]){
 //     Game game;
@@ -36,20 +35,10 @@ bool init();
 // Frees media and shuts down SDL
 void close();
 
-// int TOTAL_WINDOWS = 3;
-LWindow gWindows[3];
-
-// vector<LWindow> gWindows;
-
-
-
-// --------------------------------------
+LWindow gWindows[2];
 
 bool init()
 {
-    // int TOTAL_WINDOWS = 3;
-    // Initialization flag
-
     bool success = true;
 
     // Initialize SDL
@@ -79,9 +68,8 @@ bool init()
 
 void close()
 {
-    // int TOTAL_WINDOWS = 3;
     // Destroy windows
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 2; ++i)
     {
         gWindows[i].free();
     }
@@ -100,45 +88,9 @@ int main(int argc, char *args[])
     else
     {
         // Initialize the rest of the windows
-        for (int i = 1; i < 3; ++i)
-        {
-            gWindows[i].init();
-        }
 
-
-
-
-Uint32 render_flags = SDL_RENDERER_ACCELERATED;
-
-SDL_Renderer *rend = SDL_CreateRenderer(gWindows[0].getWin(), -1, render_flags);
-
-SDL_Surface *surface;
-
-surface = IMG_Load("./assets/paddles.png");
-
-SDL_Texture *tex = SDL_CreateTextureFromSurface(rend, surface);
-SDL_Rect dest;
-SDL_QueryTexture(tex, NULL, NULL, &dest.w, &dest.h);
-dest.w /= 6;
-dest.h /= 6;
-
-dest.x = 0;
-dest.y = 0;
-SDL_FreeSurface(surface);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        gWindows[0].init();
+        gWindows[1].init();
 
         // Main loop flag
         bool quit = false;
@@ -149,6 +101,7 @@ SDL_FreeSurface(surface);
         // While application is running
         while (!quit)
         {
+
             // Handle events on queue
             while (SDL_PollEvent(&e) != 0)
             {
@@ -159,7 +112,7 @@ SDL_FreeSurface(surface);
                 }
 
                 // Handle window events
-                for (int i = 0; i < 3; ++i)
+                for (int i = 0; i < 2; ++i)
                 {
                     gWindows[i].handleEvent(e);
                 }
@@ -176,23 +129,19 @@ SDL_FreeSurface(surface);
                     case SDLK_2:
                         gWindows[1].focus();
                         break;
-
-                    case SDLK_3:
-                        gWindows[2].focus();
-                        break;
                     }
                 }
             }
-
+            gWindows[0].loadTexture("./assets/main.png");
             // Update all windows
-            for (int i = 0; i < 3; ++i)
+            for (int i = 0; i < 2; ++i)
             {
                 gWindows[i].render();
             }
 
             // Check all windows
             bool allWindowsClosed = true;
-            for (int i = 0; i < 3; ++i)
+            for (int i = 0; i < 2; ++i)
             {
                 if (gWindows[i].isShown())
                 {
