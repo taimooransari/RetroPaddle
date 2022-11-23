@@ -123,10 +123,17 @@ void Game::run()
 {
 	bool quit = false;
 	SDL_Event e;
-	SDL_Rect srcRect, moverRect;
+
+	// test start
+	SDL_Rect srcRect, moverRect, moverRect1;
 
 	srcRect = {141, 240, 297, 818};
 	moverRect = {10, 10, 50, 150};
+	moverRect1 = {955, 10, 50, 150};
+
+	bool p1_up = false, p1_down = false, p2_up = false, p2_down = false;
+	// test end
+
 	while (!quit)
 	{
 		// Handle events on queue
@@ -156,6 +163,10 @@ void Game::run()
 					{
 						state = 5;
 					}
+					else if (state == 5)
+					{
+						state = 7;
+					}
 					break;
 				case SDLK_2:
 					cout << 2 << " Pressed " << endl;
@@ -171,12 +182,27 @@ void Game::run()
 					{
 						state = 5;
 					}
+					else if (state == 5)
+					{
+						state = 7;
+					}
 					break;
 				case SDLK_UP:
-					moverRect.y -= 10;
+					p2_up = true;
+					p2_down = false;
 					break;
 				case SDLK_DOWN:
-					moverRect.y += 10;
+					p2_up = false;
+					p2_down = true;
+					break;
+
+				case SDLK_w:
+					p1_up = true;
+					p1_down = false;
+					break;
+				case SDLK_s:
+					p1_up = false;
+					p1_down = true;
 					break;
 				// case SDLK_3:
 				// 	if (state == 2)
@@ -209,6 +235,25 @@ void Game::run()
 					{
 						state = 4;
 					}
+					break;
+				}
+			}
+			else if (e.type == SDL_KEYUP)
+			{
+
+				switch (e.key.keysym.sym)
+				{
+				case SDLK_UP:
+					p2_up = false;
+					break;
+				case SDLK_DOWN:
+					p2_down = false;
+					break;
+				case SDLK_w:
+					p1_up = false;
+					break;
+				case SDLK_s:
+					p1_down = false;
 					break;
 				}
 			}
@@ -268,12 +313,56 @@ void Game::run()
 		{
 			gTexture = loadTexture("./assets/player2paddles.png");
 		}
+		else if (state == 7)
+		{
+			gTexture = loadTexture("./assets/game.png");
+		}
+
 		SDL_RenderClear(Drawing::gRenderer); // removes everything from renderer
 		SDL_RenderCopy(Drawing::gRenderer, gTexture, NULL, NULL);
 
 		//***********************draw the objects here********************
 
-		SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
+		if (p1_up)
+		{
+			moverRect.y -= 40;
+		}
+		if (p2_up)
+		{
+			moverRect1.y -= 40;
+		}
+		if (p1_down)
+		{
+
+			moverRect.y += 40;
+		}
+		if (p2_down)
+		{
+
+			moverRect1.y += 40;
+		}
+
+		if (moverRect.y <= 10)
+		{
+			moverRect.y = 10;
+		}
+		if (moverRect.y >= 560)
+		{
+			moverRect.y = 560;
+		}
+		if (moverRect1.y <= 10)
+		{
+			moverRect1.y = 10;
+		}
+		if (moverRect1.y >= 560)
+		{
+			moverRect1.y = 560;
+		}
+		if (state == 7 || state == 6)
+		{
+			SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
+			SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect1);
+		}
 		// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &{141, 240, 297, 818}, &{10, 10, 25, 100});
 		//****************************************************************
 		SDL_RenderPresent(Drawing::gRenderer); // displays the updated renderer

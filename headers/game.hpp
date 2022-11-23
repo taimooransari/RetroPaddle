@@ -30,13 +30,15 @@ class Game
 
     bool gameRunning = false;
 
-    
-	// Object obj;
+    // Object obj;
     // 0 for mainpage
     // 1 for instructions
     // 2 for mode
     // 3 for 1player -  for easy/medium/hard
     // 4 for 2player  - 5 for paddle types
+
+    //  6 for 1player match
+    // 7 for 2payer match
 public:
     bool init();
     bool loadMedia();
