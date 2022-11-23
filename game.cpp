@@ -127,6 +127,9 @@ void Game::run()
 	// test start
 	SDL_Rect srcRect, moverRect, moverRect1;
 
+	// paddles
+	Paddle p;
+	Ball b;
 	srcRect = {141, 240, 297, 818};
 	moverRect = {10, 10, 50, 150};
 	moverRect1 = {955, 10, 50, 150};
@@ -187,11 +190,11 @@ void Game::run()
 						state = 7;
 					}
 					break;
-				case SDLK_UP:
+				case SDLK_p:
 					p2_up = true;
 					p2_down = false;
 					break;
-				case SDLK_DOWN:
+				case SDLK_l:
 					p2_up = false;
 					p2_down = true;
 					break;
@@ -243,10 +246,10 @@ void Game::run()
 
 				switch (e.key.keysym.sym)
 				{
-				case SDLK_UP:
+				case SDLK_p:
 					p2_up = false;
 					break;
-				case SDLK_DOWN:
+				case SDLK_l:
 					p2_down = false;
 					break;
 				case SDLK_w:
@@ -325,21 +328,24 @@ void Game::run()
 
 		if (p1_up)
 		{
-			moverRect.y -= 40;
+			moverRect.y -= 25;
+
+			p.movePaddle(-1);
 		}
 		if (p2_up)
 		{
-			moverRect1.y -= 40;
+			moverRect1.y -= 25;
 		}
 		if (p1_down)
 		{
 
-			moverRect.y += 40;
+			p.movePaddle(1);
+			moverRect.y += 25;
 		}
 		if (p2_down)
 		{
 
-			moverRect1.y += 40;
+			moverRect1.y += 25;
 		}
 
 		if (moverRect.y <= 10)
@@ -350,6 +356,7 @@ void Game::run()
 		{
 			moverRect.y = 560;
 		}
+
 		if (moverRect1.y <= 10)
 		{
 			moverRect1.y = 10;
@@ -360,11 +367,15 @@ void Game::run()
 		}
 		if (state == 7 || state == 6)
 		{
-			SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
+			// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
+			p.draw();
+			b.draw();
+			b.moveBall();
 			SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect1);
 		}
 		// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &{141, 240, 297, 818}, &{10, 10, 25, 100});
 		//****************************************************************
+
 		SDL_RenderPresent(Drawing::gRenderer); // displays the updated renderer
 
 		SDL_Delay(100); // causes sdl engine to delay for specified miliseconds
