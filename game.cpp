@@ -1,5 +1,6 @@
 #include "./headers/game.hpp"
 #include "./headers/drawing.hpp"
+#include "./headers/retro.hpp"
 #include <iostream>
 using namespace std;
 SDL_Renderer *Drawing::gRenderer = NULL;
@@ -124,17 +125,25 @@ void Game::run()
 	bool quit = false;
 	SDL_Event e;
 
-	// test start
-	SDL_Rect srcRect, moverRect, moverRect1;
+	// // test start
+	// SDL_Rect srcRect, moverRect, moverRect1;
 
-	// paddles
-	Paddle p;
-	Ball b;
-	srcRect = {141, 240, 297, 818};
-	moverRect = {10, 10, 50, 150};
-	moverRect1 = {955, 10, 50, 150};
+	// // paddles
+	// Paddle p;
+	// Ball b;
+	// srcRect = {141, 240, 297, 818};
+	// moverRect = {10, 10, 50, 150};
+	// moverRect1 = {955, 10, 50, 150};
+	Retro game = Retro();
 
 	bool p1_up = false, p1_down = false, p2_up = false, p2_down = false;
+
+	// init data
+	int mode;
+	int level;
+	int p1_pad;
+	int p2_pad;
+
 	// test end
 
 	while (!quit)
@@ -153,15 +162,24 @@ void Game::run()
 				switch (e.key.keysym.sym)
 				{
 				case SDLK_1:
-					cout << 1 << " Pressed " << endl;
+					// instruction
 					if (state == 0)
 					{
 						state = 1;
 					}
+					// choose mode 1
 					else if (state == 2)
 					{
 						state = 3;
+						mode = 1;
 					}
+					// mode 1 level 1
+					else if (state == 3)
+					{
+						level = 1;
+						state = 6;
+					}
+					// mode 2 p1 = 1
 					else if (state == 4)
 					{
 						state = 5;
@@ -172,22 +190,43 @@ void Game::run()
 					}
 					break;
 				case SDLK_2:
-					cout << 2 << " Pressed " << endl;
+					// choose mode
 					if (state == 0)
 					{
 						state = 2;
 					}
+
+					// choose mode 2
 					else if (state == 2)
 					{
+						mode = 2;
 						state = 4;
 					}
+					// mode 2 p1 = 2
 					else if (state == 4)
 					{
+						p1_pad = 2;
 						state = 5;
 					}
+					// mode 2 p2 = 2
 					else if (state == 5)
 					{
+						p2_pad = 2;
 						state = 7;
+					}
+					// mode 1 level 2
+					else if (state == 3)
+					{
+						level = 2;
+						state = 6;
+					}
+					break;
+				case SDLK_3:
+					// mode 1 level 3
+					if (state == 3)
+					{
+						level = 3;
+						state = 6;
 					}
 					break;
 				case SDLK_p:
@@ -207,25 +246,7 @@ void Game::run()
 					p1_up = false;
 					p1_down = true;
 					break;
-				// case SDLK_3:
-				// 	if (state == 2)
-				// 	{
-				// 		state = 3;
-				// 	}
-				// 	break;
-				// case SDLK_4:
-				// 	if (state == 2)
-				// 	{
-				// 		state = 4;
-				// 	}
-				// 	break;
-				// case SDLK_5:
-				// 	if (state == 4)
-				// 	{
-				// 		state = 5;
-				// 	}
 				case SDLK_b:
-					cout << "b Pressed" << endl;
 					if (state == 1 || state == 2)
 					{
 						state = 0;
@@ -260,36 +281,6 @@ void Game::run()
 					break;
 				}
 			}
-
-			// if (e.type == SDL_MOUSEBUTTONDOWN)
-			// {
-			// 	// this is a good location to add pigeon in linked list.
-			// 	int xMouse, yMouse;
-			// 	SDL_GetMouseState(&xMouse, &yMouse);
-			// 	if (xMouse > 220 * 1.5 && xMouse < 500 * 1.5 && yMouse > 210 * 1.5 && yMouse < 270 * 1.5)
-			// 	{
-			// 		quit = false;
-			// 		gTexture = loadTexture("./assets/mode.png");
-			// 		// tried to implement switching between multiple screens but this code is
-			// 		//  skipping the screens so i'll keep working on it
-			// 		//      if(e.type == SDL_MOUSEBUTTONDOWN){
-			// 		//          int xMouse1, yMouse1;
-			// 		//          SDL_GetMouseState(&xMouse1,&yMouse1);
-			// 		//      if(xMouse1>220 && xMouse1<500 && yMouse1>210 && yMouse1<270){
-			// 		//      quit = false;
-			// 		//      gTexture = loadTexture("levels.png");
-			// 		//      }
-			// 		//      else if(xMouse1>220 && xMouse1<500 && yMouse1>290 && yMouse1<350){
-			// 		//      quit = false;
-			// 		//      gTexture = loadTexture("player1paddles.png");
-			// 		//  }}
-			// 	}
-			// 	else if (xMouse > 220 * 1.5 && xMouse < 500 * 1.5 && yMouse > 290 * 1.5 && yMouse < 350 * 1.5)
-			// 	{
-			// 		quit = false;
-			// 		gTexture = loadTexture("./assets/instructions.png");
-			// 	}
-			// }
 		}
 
 		if (state == 0)
@@ -316,7 +307,7 @@ void Game::run()
 		{
 			gTexture = loadTexture("./assets/player2paddles.png");
 		}
-		else if (state == 7)
+		else if (state == 7 || state == 6)
 		{
 			gTexture = loadTexture("./assets/game.png");
 		}
@@ -328,56 +319,38 @@ void Game::run()
 
 		if (p1_up)
 		{
-			moverRect.y -= 25;
-
-			p.movePaddle(-1);
+			game.moveOne(-1);
 		}
 		if (p2_up)
 		{
-			moverRect1.y -= 25;
+			game.moveTwo(-1);
 		}
+
 		if (p1_down)
 		{
 
-			p.movePaddle(1);
-			moverRect.y += 25;
+			game.moveOne(1);
 		}
 		if (p2_down)
 		{
 
-			moverRect1.y += 25;
+			game.moveTwo(1);
 		}
 
-		if (moverRect.y <= 10)
-		{
-			moverRect.y = 10;
-		}
-		if (moverRect.y >= 560)
-		{
-			moverRect.y = 560;
-		}
-
-		if (moverRect1.y <= 10)
-		{
-			moverRect1.y = 10;
-		}
-		if (moverRect1.y >= 560)
-		{
-			moverRect1.y = 560;
-		}
 		if (state == 7 || state == 6)
 		{
 			// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
-			p.draw();
-			b.draw();
-			b.moveBall();
-			SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect1);
+			// p.draw();
+			// b.draw();
+			// b.moveBall();
+			// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect1);
+			game.draw();
 		}
 		// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &{141, 240, 297, 818}, &{10, 10, 25, 100});
 		//****************************************************************
 
 		SDL_RenderPresent(Drawing::gRenderer); // displays the updated renderer
 
-		SDL_Delay(100); // causes sdl engine to delay for specified miliseconds
+		// SDL_Delay(100); // causes sdl engine to delay for specified miliseconds
 	}
 }
