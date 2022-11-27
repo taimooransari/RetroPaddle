@@ -13,7 +13,7 @@ class Game
 {
     // Screen dimension constants
     const int SCREEN_WIDTH = 680 * 1.5;
-    const int SCREEN_HEIGHT = 480 * 1.5;
+    const int SCREEN_HEIGHT = 480 * 1.5 ;
 
     // vector <SDL_Window*> winds;
 

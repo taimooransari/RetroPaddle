@@ -362,7 +362,7 @@ void Game::run()
 			// b.draw();
 			// b.moveBall();
 			// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect1);
-			game.draw();
+			game.update();
 		}
 		// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &{141, 240, 297, 818}, &{10, 10, 25, 100});
 		//****************************************************************

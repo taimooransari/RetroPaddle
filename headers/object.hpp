@@ -13,6 +13,7 @@ public:
         srcRect = s;
         moverRect = m;
     };
+    virtual void setToServe(int){};
     virtual void movePaddle(int){};
     virtual void moveBall(){};
     virtual void draw() = 0;
@@ -27,8 +28,8 @@ public:
 
     void movePaddle(int dir)
     {
-        // cout << moverRect.y << endl;
-        moverRect.y += 5 * dir;
+
+        moverRect.y += 4 * dir;
         if (moverRect.y <= 10)
         {
             moverRect.y = 10;
@@ -47,8 +48,9 @@ public:
 class RegularPaddle : public Paddle
 {
 public:
-    RegularPaddle(int side = 1, SDL_Rect s = {141, 240, 297, 818}, SDL_Rect m = {10, 10, 30, 90}) : Paddle(s, m)
+    RegularPaddle(int side = 1, SDL_Rect s = {141, 240, 297, 818}, SDL_Rect m = {10, 315, 30, 90}) : Paddle(s, m)
     {
+        moverRect.y = (720 - moverRect.h) / 2;
         if (side == 2)
         {
             moverRect.x = 980;
@@ -58,14 +60,19 @@ public:
     {
         SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
     };
+    void movePaddle(int dir)
+    {
+        Paddle::movePaddle((int)(dir * 2));
+    }
 };
 
 class SpeedPaddle : public Paddle
 {
 
 public:
-    SpeedPaddle(int side = 1, SDL_Rect s = {559, 240, 297, 818}, SDL_Rect m = {10, 10, 30, 90}) : Paddle(s, m)
+    SpeedPaddle(int side = 1, SDL_Rect s = {559, 240, 297, 818}, SDL_Rect m = {10, 315, 30, 70}) : Paddle(s, m)
     {
+        moverRect.y = (720 - moverRect.h) / 2;
         if (side == 2)
         {
             moverRect.x = 980;
@@ -75,15 +82,21 @@ public:
     {
         SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
     };
+    void movePaddle(int dir)
+    {
+
+        Paddle::movePaddle((int)(dir * 3));
+    }
 };
 
 class LongPaddle : public Paddle
 {
 
 public:
-    LongPaddle(int side = 1, SDL_Rect s = {977,240,297,1090}, SDL_Rect m = {10, 10, 30, 90}) : Paddle(s, m)
+    LongPaddle(int side = 1, SDL_Rect s = {977, 240, 297, 1090}, SDL_Rect m = {10, 300, 30, 90}) : Paddle(s, m)
     {
         moverRect.h = 120;
+        moverRect.y = (720 - moverRect.h) / 2;
         if (side == 2)
         {
             moverRect.x = 980;
@@ -93,6 +106,12 @@ public:
     {
         SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
     };
+
+    void movePaddle(int dir)
+    {
+
+        Paddle::movePaddle((int)(dir));
+    }
 };
 
 class Ball : public Object
@@ -118,5 +137,11 @@ public:
             dir *= -1;
             moverRect.y = 670;
         }
+    }
+
+    void setToServe(int side)
+    {
+        moverRect.y = (720 - moverRect.h) / 2;
+        moverRect.x = 40;
     }
 };

@@ -9,6 +9,7 @@ class Retro
     Player *player_two;
     Object *ball;
     bool isRunning;
+    bool isServing;
 
 public:
     Retro()
@@ -17,6 +18,7 @@ public:
         player_two = new HumanPlayer(2, 1);
         ball = new Ball();
         isRunning = true;
+        isServing = true;
     };
 
     Retro(int mode, int level, int pad1, int pad2)
@@ -41,21 +43,31 @@ public:
         // }
     }
 
-    void draw()
+    void update()
     {
         player_one->paddle->draw();
         player_two->paddle->draw();
-        ball->moveBall();
         ball->draw();
+        if (isServing)
+        {
+            ball->setToServe(1);
+        }
+        else
+        {
+
+            ball->moveBall();
+        }
     };
 
     void moveOne(int dir)
     {
+        isServing = false;
         player_one->movepaddle(dir);
     };
 
     void moveTwo(int dir)
     {
+        isServing = true;
         player_two->movepaddle(dir);
     };
 

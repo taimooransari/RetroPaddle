@@ -45,6 +45,7 @@ public:
         // }
 
         if (pad_type == 1)
+        
         {
             paddle = new SpeedPaddle(side);
         }
