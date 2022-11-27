@@ -134,7 +134,7 @@ void Game::run()
 	// srcRect = {141, 240, 297, 818};
 	// moverRect = {10, 10, 50, 150};
 	// moverRect1 = {955, 10, 50, 150};
-	Retro game = Retro();
+	Retro game;
 
 	bool p1_up = false, p1_down = false, p2_up = false, p2_down = false;
 
@@ -143,7 +143,6 @@ void Game::run()
 	int level;
 	int p1_pad;
 	int p2_pad;
-
 	// test end
 
 	while (!quit)
@@ -182,11 +181,13 @@ void Game::run()
 					// mode 2 p1 = 1
 					else if (state == 4)
 					{
+						p1_pad = 1;
 						state = 5;
 					}
 					else if (state == 5)
 					{
 						state = 7;
+						game = Retro(mode, level, p1_pad, p2_pad);
 					}
 					break;
 				case SDLK_2:
@@ -213,6 +214,8 @@ void Game::run()
 					{
 						p2_pad = 2;
 						state = 7;
+
+						game = Retro(mode, level, p1_pad, p2_pad);
 					}
 					// mode 1 level 2
 					else if (state == 3)
@@ -228,7 +231,22 @@ void Game::run()
 						level = 3;
 						state = 6;
 					}
+					// mode 2 p1 = 2
+					else if (state == 4)
+					{
+						p1_pad = 3;
+						state = 5;
+					}
+					// mode 2 p2 = 2
+					else if (state == 5)
+					{
+						p2_pad = 3;
+						state = 7;
+
+						game = Retro(mode, level, p1_pad, p2_pad);
+					}
 					break;
+
 				case SDLK_p:
 					p2_up = true;
 					p2_down = false;
@@ -282,7 +300,7 @@ void Game::run()
 				}
 			}
 		}
-
+		SDL_DestroyTexture(gTexture);
 		if (state == 0)
 		{
 			gTexture = loadTexture("./assets/main.png");
