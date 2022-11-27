@@ -21,12 +21,9 @@ public:
 class Paddle : public Object
 {
 public:
-    Paddle(SDL_Rect s = {141, 240, 297, 818}, SDL_Rect m = {10, 10, 40, 120}) : Object(s, m){};
+    Paddle(SDL_Rect s, SDL_Rect m) : Object(s, m){};
 
-    void draw()
-    {
-        SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
-    };
+    virtual void draw() = 0;
 
     void movePaddle(int dir)
     {
@@ -36,28 +33,67 @@ public:
         {
             moverRect.y = 10;
         }
-        if (moverRect.y >= 560)
+        if (moverRect.y >= 670 - moverRect.h)
         {
-            moverRect.y = 560;
+            moverRect.y = 670 - moverRect.h;
         }
     }
 };
 
-// class FastPaddle : public Paddle
-// {
-// };
+// regular = {141,240,297,818}
+// fast = {559, 240, 297, 818}
+// long = {977,240,297,1090}
 
-// class FastPaddle : public Paddle
-// {
-// };
+class RegularPaddle : public Paddle
+{
+public:
+    RegularPaddle(int side = 1, SDL_Rect s = {141, 240, 297, 818}, SDL_Rect m = {10, 10, 30, 90}) : Paddle(s, m)
+    {
+        if (side == 2)
+        {
+            moverRect.x = 980;
+        }
+    }
+    void draw()
+    {
+        SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
+    };
+};
 
-// class SpeedPaddle : public Paddle
-// {
-// };
+class SpeedPaddle : public Paddle
+{
 
-// class LongPaddle : public Paddle
-// {
-// };
+public:
+    SpeedPaddle(int side = 1, SDL_Rect s = {559, 240, 297, 818}, SDL_Rect m = {10, 10, 30, 90}) : Paddle(s, m)
+    {
+        if (side == 2)
+        {
+            moverRect.x = 980;
+        }
+    }
+    void draw()
+    {
+        SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
+    };
+};
+
+class LongPaddle : public Paddle
+{
+
+public:
+    LongPaddle(int side = 1, SDL_Rect s = {977,240,297,1090}, SDL_Rect m = {10, 10, 30, 90}) : Paddle(s, m)
+    {
+        moverRect.h = 120;
+        if (side == 2)
+        {
+            moverRect.x = 980;
+        }
+    }
+    void draw()
+    {
+        SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
+    };
+};
 
 class Ball : public Object
 {
@@ -77,10 +113,10 @@ public:
             moverRect.y = 10;
             dir *= -1;
         }
-        if (moverRect.y >= 610)
+        if (moverRect.y >= 670)
         {
             dir *= -1;
-            moverRect.y = 610;
+            moverRect.y = 670;
         }
     }
 };
