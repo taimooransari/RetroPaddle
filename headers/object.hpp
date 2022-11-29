@@ -13,7 +13,14 @@ public:
         srcRect = s;
         moverRect = m;
     };
-    virtual void setToServe(int){};
+
+    virtual int isScored() { return 0; };
+    virtual void collideFromWall(){};
+    virtual int collideFromPaddle(Object *p1, Object *p2) { return 0; };
+    SDL_Rect getMover() { return moverRect; };
+    // virtual void setToServe(int){};
+
+    virtual void setToServe(int side) { moverRect.y = (720 - moverRect.h) / 2; }
     virtual void movePaddle(int){};
     virtual void moveBall(){};
     virtual void draw() = 0;
@@ -34,9 +41,9 @@ public:
         {
             moverRect.y = 10;
         }
-        if (moverRect.y >= 670 - moverRect.h)
+        if (moverRect.y >= 700 - moverRect.h)
         {
-            moverRect.y = 670 - moverRect.h;
+            moverRect.y = 700 - moverRect.h;
         }
     }
 };
@@ -117,31 +124,179 @@ public:
 class Ball : public Object
 {
 public:
+    bool onServe = true;
     int dir = 1;
-    Ball() : Object({559, 240, 297, 818 / 3}, {490, 10, 30, 30}){};
+    int vel_X = 7;
+    int vel_Y = -7;
+    Ball() : Object({181, 1419, 215, 215}, {490, 10, 20, 20}){};
 
     void draw()
     {
         SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
     };
+
+    void collideFromWall()
+    {
+        vel_Y *= -1;
+    }
+
+    int collideFromPaddle(Object *p1, Object *p2)
+    {
+        // cout << "check collison" << endl;
+
+        // if (moverRect.x <= 10 || moverRect.x + moverRect.w>= 980)
+        // {
+        //     vel_X *= -1;
+        // }
+        SDL_Rect padCord = p1->getMover();
+        if (moverRect.x <= 40)
+        {
+            // if ((moverRect.y >= padCord.y && moverRect.y <= padCord.y + padCord.h) || (moverRect.y + moverRect.h >= padCord.y && moverRect.y + moverRect.h <= padCord.y + padCord.h))
+            // {
+            //     vel_X *= -1;
+
+            //     return 1;
+            // }
+            if (moverRect.y >= padCord.y && moverRect.y <= padCord.y + padCord.h)
+            {
+                vel_X *= -1;
+                if (moverRect.y <= padCord.y + padCord.h / 3)
+                {
+                    vel_Y = -7;
+                }
+                else if (moverRect.y <= padCord.y + padCord.h / 1.5)
+                {
+
+                    vel_Y *= rand() % 3 - 1;
+                }
+                else
+                {
+                    vel_Y = 7;
+                }
+                return 1;
+            }
+            else if (moverRect.y + moverRect.h >= padCord.y && moverRect.y + moverRect.h <= padCord.y + padCord.h)
+            {
+
+                vel_X *= -1;
+                if (moverRect.y <= padCord.y + padCord.h / 3)
+                {
+                    vel_Y = -7;
+                }
+                else if (moverRect.y <= padCord.y + padCord.h / 1.5)
+                {
+
+                    vel_Y *= rand() % 3 - 1;
+                }
+                else
+                {
+                    vel_Y = 7;
+                }
+                return 1;
+            }
+
+            // if (vel_Y == 0)
+            // {
+            //     vel_Y = 5;
+            // }
+            return -1;
+        }
+
+        else if (moverRect.x + moverRect.w >= 980)
+        {
+            padCord = p2->getMover();
+            if (moverRect.y >= padCord.y && moverRect.y <= padCord.y + padCord.h)
+            {
+                vel_X *= -1;
+                if (moverRect.y <= padCord.y + padCord.h / 3)
+                {
+                    vel_Y = -7;
+                }
+                else if (moverRect.y <= padCord.y + padCord.h / 1.5)
+                {
+
+                    vel_Y *= rand() % 3 - 1;
+                }
+                else
+                {
+                    vel_Y = 7;
+                }
+                return 2;
+            }
+            else if (moverRect.y + moverRect.h >= padCord.y && moverRect.y + moverRect.h <= padCord.y + padCord.h)
+            {
+
+                vel_X *= -1;
+                if (moverRect.y <= padCord.y + padCord.h / 3)
+                {
+                    vel_Y = -7;
+                }
+                else if (moverRect.y <= padCord.y + padCord.h / 1.5)
+                {
+
+                    vel_Y *= rand() % 3 - 1;
+                }
+                else
+                {
+                    vel_Y = 7;
+                }
+                return 2;
+            }
+
+            // if (vel_Y == 0)
+            // {
+            //     vel_Y = 5;
+            // }
+            return -1;
+        }
+
+        // setToServe();
+        return 0;
+    }
+
+    int isScored()
+    {
+        if (moverRect.x <= 10)
+        {
+
+            return 2;
+        }
+        else if (moverRect.x >= 980)
+        {
+
+            return 1;
+        }
+        return 0;
+    }
+
     void moveBall()
     {
-        moverRect.y += 8 * dir;
-        if (moverRect.y <= 10)
+        // if (moverRect.x >= 10 && moverRect.x <= 980)
+        // {
+        moverRect.x += vel_X;
+        moverRect.y += vel_Y;
+        // }
+
+        if (moverRect.y <= 10 || moverRect.y >= 700 - moverRect.h)
         {
-            moverRect.y = 10;
-            dir *= -1;
-        }
-        if (moverRect.y >= 670)
-        {
-            dir *= -1;
-            moverRect.y = 670;
+
+            collideFromWall();
         }
     }
 
-    void setToServe(int side)
+    void setToServe(int side = 0)
     {
         moverRect.y = (720 - moverRect.h) / 2;
-        moverRect.x = 40;
+        if (side == 0)
+        {
+            moverRect.x = 40;
+            vel_X = abs(vel_X);
+        }
+        else
+        {
+            moverRect.x = 980;
+            vel_X = -1 * abs(vel_X);
+        }
+        onServe = true;
     }
 };

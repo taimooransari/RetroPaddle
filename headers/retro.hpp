@@ -9,7 +9,8 @@ class Retro
     Player *player_two;
     Object *ball;
     bool isRunning;
-    bool isServing;
+    bool isServing = true;
+    ;
 
 public:
     Retro()
@@ -32,10 +33,10 @@ public:
             player_two = new HumanPlayer(2, pad2);
         }
 
-        cout << "game: " << mode << endl;
-        cout << "level: " << level << endl;
-        cout << "pad1: " << pad1 << endl;
-        cout << "pad2: " << pad2 << endl;
+        // cout << "game: " << mode << endl;
+        // cout << "level: " << level << endl;
+        // cout << "pad1: " << pad1 << endl;
+        // cout << "pad2: " << pad2 << endl;
 
         // else
         // {
@@ -50,12 +51,35 @@ public:
         ball->draw();
         if (isServing)
         {
-            ball->setToServe(1);
+            ball->setToServe(0);
+            player_one->paddle->setToServe(0);
+            player_two->paddle->setToServe(0);
         }
         else
         {
-
+            // cout << "moving" << endl;
             ball->moveBall();
+            int a = ball->collideFromPaddle(player_one->paddle, player_two->paddle);
+            int b = ball->isScored();
+
+            if (b > 0)
+            {
+
+                if (b == 1)
+                {
+                    // player_one->updateScore();
+                    ++(*player_one);
+                }
+                else if (b == 2)
+                {
+                    player_two->updateScore();
+                }
+
+                cout << "p1 " << player_one->score << " p2 " << player_two->score << endl;
+                isServing = true;
+
+                SDL_Delay(2000);
+            }
         }
     };
 
@@ -67,7 +91,7 @@ public:
 
     void moveTwo(int dir)
     {
-        isServing = true;
+        // isServing = true;
         player_two->movepaddle(dir);
     };
 
