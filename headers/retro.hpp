@@ -42,7 +42,7 @@ public:
         else
         {
             isPC = true;
-            player_two = new PC();
+            player_two = new PC(level);
         }
     }
 

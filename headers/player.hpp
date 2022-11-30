@@ -48,9 +48,10 @@ public:
 class PC : public Player
 {
 public:
-    PC() : Player()
+    int level;
+    PC(int lvl = 1) : Player()
     {
-
+        level = lvl;
         paddle = new RegularPaddle(2);
     }
     void movepaddle(int dir)
@@ -62,7 +63,7 @@ public:
     {
         SDL_Rect padCord = paddle->getMover();
         int odd = rand() % 100 + 1;
-        if (odd >= 30)
+        if (odd >= int(35 / level))
         {
             if ((ballDimensions.y + (ballDimensions.h) / 2 < padCord.y + (padCord.h) / 3))
             {
