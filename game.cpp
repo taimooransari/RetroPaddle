@@ -2,9 +2,15 @@
 #include "./headers/drawing.hpp"
 #include "./headers/retro.hpp"
 #include <iostream>
+#include <SDL_mixer.h>
 using namespace std;
 SDL_Renderer *Drawing::gRenderer = NULL;
 SDL_Texture *Drawing::assets = NULL;
+Mix_Chunk *Drawing::gLeft = NULL;
+Mix_Chunk *Drawing::gRight = NULL;
+Mix_Chunk *Drawing::gWall = NULL;
+Mix_Chunk*	Drawing::gScore = NULL;
+Mix_Music *Drawing::gMusic = NULL;
 
 bool Game::init()
 {
@@ -13,7 +19,7 @@ bool Game::init()
 
 	// obj = Object();
 	// Initialize SDL
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 	{
 		printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
 		success = false;
@@ -35,8 +41,10 @@ bool Game::init()
 		}
 		else
 		{
+
 			// Create renderer for window
-			Drawing::gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+			// Drawing::gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+			Drawing::gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 			if (Drawing::gRenderer == NULL)
 			{
@@ -53,6 +61,12 @@ bool Game::init()
 				if (!(IMG_Init(imgFlags) & imgFlags))
 				{
 					printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+					success = false;
+				}
+				// Initialize SDL_mixer
+				if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+				{
+					printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 					success = false;
 				}
 			}
@@ -75,6 +89,39 @@ bool Game::loadMedia()
 		printf("Unable to run due to error: %s\n", SDL_GetError());
 		success = false;
 	}
+
+	// Load music
+	Drawing::gMusic = Mix_LoadMUS("./assets/ost/game.wav");
+	if (Drawing::gMusic == NULL)
+	{
+		printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+
+	// Load sound effects
+	Drawing::gLeft = Mix_LoadWAV("./assets/ost/ping.ogg");
+	if (Drawing::gLeft == NULL)
+	{
+		printf("Failed to load scratch sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+
+	// Load sound effects
+	Drawing::gRight = Mix_LoadWAV("./assets/ost/pong.ogg");
+	if (Drawing::gRight == NULL)
+	{
+		printf("Failed to load scratch sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+
+	// Load sound effects
+	Drawing::gWall = Mix_LoadWAV("./assets/ost/hit_paddle.wav");
+	if (Drawing::gWall == NULL)
+	{
+		printf("Failed to load scratch sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+
 	return success;
 }
 
@@ -83,6 +130,20 @@ void Game::close()
 	// Free loaded images
 
 	SDL_DestroyTexture(gTexture);
+
+	// Free the sound effects
+	Mix_FreeChunk(Drawing::gLeft);
+	Mix_FreeChunk(Drawing::gRight);
+	Mix_FreeChunk(Drawing::gWall);
+	// Mix_FreeChunk(Drawing::gScore);
+	Drawing::gLeft = NULL;
+	Drawing::gRight = NULL;
+	Drawing::gWall = NULL;
+	// Drawing::gScore = NULL;
+
+	// Free the music
+	Mix_FreeMusic(Drawing::gMusic);
+	Drawing::gMusic = NULL;
 
 	// Destroy window
 	SDL_DestroyRenderer(Drawing::gRenderer);
@@ -145,6 +206,8 @@ void Game::run()
 	int p2_pad;
 	// test end
 
+	// Play the music
+	Mix_PlayMusic(Drawing::gMusic, 99);
 	while (!quit)
 	{
 		// Handle events on queue
@@ -160,6 +223,30 @@ void Game::run()
 			{
 				switch (e.key.keysym.sym)
 				{
+				case SDLK_9:
+					// If there is no music playing
+					if (Mix_PlayingMusic() == 0)
+					{
+						// Play the music
+						Mix_PlayMusic(Drawing::gMusic, 99);
+					}
+					// If music is being played
+					else
+					{
+						// If the music is paused
+						if (Mix_PausedMusic() == 1)
+						{
+							// Resume the music
+							Mix_ResumeMusic();
+						}
+						// If the music is playing
+						else
+						{
+							// Pause the music
+							Mix_PauseMusic();
+						}
+					}
+					break;
 				case SDLK_1:
 					// instruction
 					if (state == 0)
