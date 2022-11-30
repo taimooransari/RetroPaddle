@@ -10,12 +10,13 @@ class Retro
     Object *ball;
     bool isRunning;
     bool isServing = true;
+    bool isPC = false;
 
 public:
     Retro()
     {
-        player_one = new HumanPlayer(1, 1);
-        player_two = new HumanPlayer(2, 1);
+        player_one = new HumanPlayer(1, 3);
+        player_two = new PC();
         ball = new Ball();
         isRunning = true;
         isServing = true;
@@ -24,6 +25,11 @@ public:
     Retro(int mode, int level, int pad1, int pad2)
     {
 
+        cout << "mode: " << mode << endl;
+        cout << "lvl: " << level << endl;
+        cout << "p1: " << pad1 << endl;
+        cout << "p2: " << pad2 << endl;
+
         ball = new Ball();
         isRunning = true;
         player_one = new HumanPlayer(1, pad1);
@@ -31,14 +37,21 @@ public:
         {
             player_two = new HumanPlayer(2, pad2);
         }
-        // else
-        // {
-        //     player_two = new
-        // }
+        else
+        {
+            isPC = true;
+            player_two = new PC();
+        }
     }
 
     void update()
     {
+
+        if (isPC)
+        {
+            player_two->decideDirection(ball->getMover());
+        }
+
         player_one->paddle->draw();
         player_two->paddle->draw();
         ball->draw();

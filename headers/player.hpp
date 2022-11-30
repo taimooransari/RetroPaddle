@@ -10,7 +10,7 @@ public:
     Player(){};
     virtual void movepaddle(int dir) = 0;
     void updateScore() { score++; };
-
+    virtual void decideDirection(SDL_Rect ballDimension){};
     void operator++()
     {
         score++;
@@ -41,14 +41,35 @@ public:
 
     void movepaddle(int dir)
     {
-        // cout<<"move 2"<<endl;
         paddle->movePaddle(dir);
     };
 };
 
 class PC : public Player
 {
-
 public:
-    void movepaddle();
-};
+    PC() : Player()
+    {
+
+        paddle = new RegularPaddle(2);
+    }
+    void movepaddle(int dir)
+    {
+
+        paddle->movePaddle(dir);
+    };
+    void decideDirection(SDL_Rect ballDimensions)
+    {
+        SDL_Rect padCord = paddle->getMover();
+        if ((ballDimensions.y + (ballDimensions.h) / 2 < padCord.y + (padCord.h) / 3))
+        {
+            movepaddle(-1);
+        }
+        else if (ballDimensions.y + (ballDimensions.h) / 2 > padCord.y + (padCord.h) / 1.5)
+        {
+            movepaddle(1);
+        }
+    };
+}
+
+;

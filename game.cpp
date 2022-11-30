@@ -177,6 +177,7 @@ void Game::run()
 					{
 						level = 1;
 						state = 6;
+						game = Retro(mode, level, 3, 3);
 					}
 					// mode 2 p1 = 1
 					else if (state == 4)
@@ -222,6 +223,7 @@ void Game::run()
 					{
 						level = 2;
 						state = 6;
+						game = Retro(mode, level, 3, 3);
 					}
 					break;
 				case SDLK_3:
@@ -230,6 +232,8 @@ void Game::run()
 					{
 						level = 3;
 						state = 6;
+
+						game = Retro(mode, level, 3, 3);
 					}
 					// mode 2 p1 = 2
 					else if (state == 4)
@@ -305,6 +309,7 @@ void Game::run()
 				}
 			}
 		}
+
 		SDL_DestroyTexture(gTexture);
 		if (state == 0)
 		{
