@@ -138,6 +138,16 @@ public:
     void collideFromWall()
     {
         vel_Y *= -1;
+        int rnd = rand() % 2;
+        if (rnd == 0)
+        {
+            Mix_PlayChannel(-1, Drawing::gLeft, 0);
+        }
+        else
+        {
+
+            Mix_PlayChannel(-1, Drawing::gRight, 0);
+        }
     }
 
     int collideFromPaddle(Object *p1, Object *p2)
@@ -163,6 +173,17 @@ public:
                 {
                     vel_Y = 7;
                 }
+
+                int rnd = rand() % 2;
+                if (rnd == 0)
+                {
+                    Mix_PlayChannel(-1, Drawing::gLeft, 0);
+                }
+                else
+                {
+
+                    Mix_PlayChannel(-1, Drawing::gRight, 0);
+                }
                 return 1;
             }
             else if (moverRect.y + moverRect.h >= padCord.y && moverRect.y + moverRect.h <= padCord.y + padCord.h)
@@ -181,6 +202,17 @@ public:
                 else
                 {
                     vel_Y = 7;
+                }
+
+                int rnd = rand() % 2;
+                if (rnd == 0)
+                {
+                    Mix_PlayChannel(-1, Drawing::gLeft, 0);
+                }
+                else
+                {
+
+                    Mix_PlayChannel(-1, Drawing::gRight, 0);
                 }
                 return 1;
             }
@@ -207,6 +239,17 @@ public:
                 {
                     vel_Y = 7;
                 }
+
+                int rnd = rand() % 2;
+                if (rnd == 0)
+                {
+                    Mix_PlayChannel(-1, Drawing::gLeft, 0);
+                }
+                else
+                {
+
+                    Mix_PlayChannel(-1, Drawing::gRight, 0);
+                }
                 return 2;
             }
             else if (moverRect.y + moverRect.h >= padCord.y && moverRect.y + moverRect.h <= padCord.y + padCord.h)
@@ -226,6 +269,16 @@ public:
                 {
                     vel_Y = 7;
                 }
+                int rnd = rand() % 2;
+                if (rnd == 0)
+                {
+                    Mix_PlayChannel(-1, Drawing::gLeft, 0);
+                }
+                else
+                {
+
+                    Mix_PlayChannel(-1, Drawing::gRight, 0);
+                }
                 return 2;
             }
 
@@ -239,12 +292,15 @@ public:
     {
         if (moverRect.x <= 10)
         {
+            Mix_PlayChannel(-1, Drawing::gScore, 0);
+
             setToServe(2);
             return 2;
         }
         else if (moverRect.x >= 980)
         {
 
+            Mix_PlayChannel(-1, Drawing::gScore, 0);
             setToServe(1);
             return 1;
         }
@@ -273,13 +329,11 @@ public:
         {
             moverRect.x = 40;
             vel_X = abs(vel_X);
-            cout << "left" << endl;
         }
         else if (lastHit == 1)
         {
             moverRect.x = 960;
             vel_X = -1 * abs(vel_X);
-            cout << "right" << endl;
         }
         onServe = true;
     }

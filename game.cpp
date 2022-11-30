@@ -8,8 +8,8 @@ SDL_Renderer *Drawing::gRenderer = NULL;
 SDL_Texture *Drawing::assets = NULL;
 Mix_Chunk *Drawing::gLeft = NULL;
 Mix_Chunk *Drawing::gRight = NULL;
-Mix_Chunk *Drawing::gWall = NULL;
-Mix_Chunk*	Drawing::gScore = NULL;
+Mix_Chunk *Drawing::gButton = NULL;
+Mix_Chunk *Drawing::gScore = NULL;
 Mix_Music *Drawing::gMusic = NULL;
 
 bool Game::init()
@@ -115,8 +115,16 @@ bool Game::loadMedia()
 	}
 
 	// Load sound effects
-	Drawing::gWall = Mix_LoadWAV("./assets/ost/hit_paddle.wav");
-	if (Drawing::gWall == NULL)
+	Drawing::gButton = Mix_LoadWAV("./assets/ost/hit_paddle.wav");
+	if (Drawing::gButton == NULL)
+	{
+		printf("Failed to load scratch sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+
+	// Load sound effects
+	Drawing::gScore = Mix_LoadWAV("./assets/ost/score.wav");
+	if (Drawing::gButton == NULL)
 	{
 		printf("Failed to load scratch sound effect! SDL_mixer Error: %s\n", Mix_GetError());
 		success = false;
@@ -134,11 +142,11 @@ void Game::close()
 	// Free the sound effects
 	Mix_FreeChunk(Drawing::gLeft);
 	Mix_FreeChunk(Drawing::gRight);
-	Mix_FreeChunk(Drawing::gWall);
+	Mix_FreeChunk(Drawing::gButton);
 	// Mix_FreeChunk(Drawing::gScore);
 	Drawing::gLeft = NULL;
 	Drawing::gRight = NULL;
-	Drawing::gWall = NULL;
+	Drawing::gButton = NULL;
 	// Drawing::gScore = NULL;
 
 	// Free the music
@@ -224,9 +232,12 @@ void Game::run()
 				switch (e.key.keysym.sym)
 				{
 				case SDLK_9:
+
+					Mix_PlayChannel(-1, Drawing::gButton, 0);
 					// If there is no music playing
 					if (Mix_PlayingMusic() == 0)
 					{
+
 						// Play the music
 						Mix_PlayMusic(Drawing::gMusic, 99);
 					}
@@ -248,6 +259,12 @@ void Game::run()
 					}
 					break;
 				case SDLK_1:
+
+					if (state <= 5)
+					{
+
+						Mix_PlayChannel(-1, Drawing::gButton, 0);
+					}
 					// instruction
 					if (state == 0)
 					{
@@ -277,8 +294,15 @@ void Game::run()
 						state = 7;
 						game = Retro(mode, level, p1_pad, p2_pad);
 					}
+
 					break;
 				case SDLK_2:
+
+					if (state <= 5)
+					{
+
+						Mix_PlayChannel(-1, Drawing::gButton, 0);
+					}
 					// choose mode
 					if (state == 0)
 					{
@@ -314,6 +338,12 @@ void Game::run()
 					}
 					break;
 				case SDLK_3:
+
+					if (state <= 5)
+					{
+
+						Mix_PlayChannel(-1, Drawing::gButton, 0);
+					}
 					// mode 1 level 3
 					if (state == 3)
 					{
@@ -338,9 +368,12 @@ void Game::run()
 					}
 					break;
 				case SDLK_r:
+
 					if (state == 8)
 					{
 						state = 0;
+
+						Mix_PlayChannel(-1, Drawing::gButton, 0);
 					}
 					break;
 				case SDLK_p:
@@ -364,14 +397,19 @@ void Game::run()
 					if (state == 1 || state == 2)
 					{
 						state = 0;
+
+						Mix_PlayChannel(-1, Drawing::gButton, 0);
 					}
 					else if (state == 4 || state == 3)
 					{
 						state = 2;
+
+						Mix_PlayChannel(-1, Drawing::gButton, 0);
 					}
 					else if (state == 5)
 					{
 						state = 4;
+						Mix_PlayChannel(-1, Drawing::gButton, 0);
 					}
 					break;
 				}

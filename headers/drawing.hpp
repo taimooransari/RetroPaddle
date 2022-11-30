@@ -15,6 +15,6 @@ public:
     // The sound effects that will be used
     static Mix_Chunk *gLeft;
     static Mix_Chunk *gRight ;
-    static Mix_Chunk *gWall;
+    static Mix_Chunk *gButton;
     static Mix_Chunk *gScore;
 };
