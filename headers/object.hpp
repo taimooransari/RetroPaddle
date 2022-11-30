@@ -126,8 +126,8 @@ class Ball : public Object
 public:
     bool onServe = true;
     int dir = 1;
-    int vel_X = 7;
-    int vel_Y = -7;
+    int vel_X = 6;
+    int vel_Y = -6;
     Ball() : Object({181, 1419, 215, 215}, {490, 10, 20, 20}){};
 
     void draw()
@@ -142,27 +142,17 @@ public:
 
     int collideFromPaddle(Object *p1, Object *p2)
     {
-        // cout << "check collison" << endl;
 
-        // if (moverRect.x <= 10 || moverRect.x + moverRect.w>= 980)
-        // {
-        //     vel_X *= -1;
-        // }
         SDL_Rect padCord = p1->getMover();
         if (moverRect.x <= 40)
         {
-            // if ((moverRect.y >= padCord.y && moverRect.y <= padCord.y + padCord.h) || (moverRect.y + moverRect.h >= padCord.y && moverRect.y + moverRect.h <= padCord.y + padCord.h))
-            // {
-            //     vel_X *= -1;
 
-            //     return 1;
-            // }
             if (moverRect.y >= padCord.y && moverRect.y <= padCord.y + padCord.h)
             {
                 vel_X *= -1;
                 if (moverRect.y <= padCord.y + padCord.h / 3)
                 {
-                    vel_Y = -7;
+                    vel_Y = -6;
                 }
                 else if (moverRect.y <= padCord.y + padCord.h / 1.5)
                 {
@@ -171,7 +161,7 @@ public:
                 }
                 else
                 {
-                    vel_Y = 7;
+                    vel_Y = 6;
                 }
                 return 1;
             }
@@ -181,7 +171,7 @@ public:
                 vel_X *= -1;
                 if (moverRect.y <= padCord.y + padCord.h / 3)
                 {
-                    vel_Y = -7;
+                    vel_Y = -6;
                 }
                 else if (moverRect.y <= padCord.y + padCord.h / 1.5)
                 {
@@ -190,15 +180,11 @@ public:
                 }
                 else
                 {
-                    vel_Y = 7;
+                    vel_Y = 6;
                 }
                 return 1;
             }
 
-            // if (vel_Y == 0)
-            // {
-            //     vel_Y = 5;
-            // }
             return -1;
         }
 
@@ -210,7 +196,7 @@ public:
                 vel_X *= -1;
                 if (moverRect.y <= padCord.y + padCord.h / 3)
                 {
-                    vel_Y = -7;
+                    vel_Y = -6;
                 }
                 else if (moverRect.y <= padCord.y + padCord.h / 1.5)
                 {
@@ -219,7 +205,7 @@ public:
                 }
                 else
                 {
-                    vel_Y = 7;
+                    vel_Y = 6;
                 }
                 return 2;
             }
@@ -229,7 +215,7 @@ public:
                 vel_X *= -1;
                 if (moverRect.y <= padCord.y + padCord.h / 3)
                 {
-                    vel_Y = -7;
+                    vel_Y = -6;
                 }
                 else if (moverRect.y <= padCord.y + padCord.h / 1.5)
                 {
@@ -238,19 +224,14 @@ public:
                 }
                 else
                 {
-                    vel_Y = 7;
+                    vel_Y = 6;
                 }
                 return 2;
             }
 
-            // if (vel_Y == 0)
-            // {
-            //     vel_Y = 5;
-            // }
             return -1;
         }
 
-        // setToServe();
         return 0;
     }
 

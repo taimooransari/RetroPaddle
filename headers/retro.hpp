@@ -10,7 +10,6 @@ class Retro
     Object *ball;
     bool isRunning;
     bool isServing = true;
-    ;
 
 public:
     Retro()
@@ -32,15 +31,9 @@ public:
         {
             player_two = new HumanPlayer(2, pad2);
         }
-
-        // cout << "game: " << mode << endl;
-        // cout << "level: " << level << endl;
-        // cout << "pad1: " << pad1 << endl;
-        // cout << "pad2: " << pad2 << endl;
-
         // else
         // {
-        // player_two
+        //     player_two = new
         // }
     }
 
@@ -72,16 +65,35 @@ public:
                 }
                 else if (b == 2)
                 {
-                    player_two->updateScore();
+                    ++(*player_two);
+
+                    // player_two->updateScore();
                 }
 
                 cout << "p1 " << player_one->score << " p2 " << player_two->score << endl;
                 isServing = true;
 
-                SDL_Delay(2000);
+                SDL_Delay(700);
             }
         }
     };
+
+    int declareResult()
+    {
+
+        if (player_one->score >= 10)
+        {
+            isRunning = false;
+            return 1;
+        }
+        else if (player_one->score >= 10)
+        {
+            isRunning = false;
+            return 2;
+        }
+
+        return 0;
+    }
 
     void moveOne(int dir)
     {
@@ -93,10 +105,5 @@ public:
     {
         // isServing = true;
         player_two->movepaddle(dir);
-    };
-
-    void declareResult()
-    {
-        isRunning = false;
     };
 };

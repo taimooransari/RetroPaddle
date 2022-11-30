@@ -246,7 +246,12 @@ void Game::run()
 						game = Retro(mode, level, p1_pad, p2_pad);
 					}
 					break;
-
+				case SDLK_r:
+					if (state == 8)
+					{
+						state = 0;
+					}
+					break;
 				case SDLK_p:
 					p2_up = true;
 					p2_down = false;
@@ -329,40 +334,54 @@ void Game::run()
 		{
 			gTexture = loadTexture("./assets/game.png");
 		}
+		else if (state == 8)
+		{
+
+			gTexture = loadTexture("./assets/game_over.png");
+		}
 
 		SDL_RenderClear(Drawing::gRenderer); // removes everything from renderer
 		SDL_RenderCopy(Drawing::gRenderer, gTexture, NULL, NULL);
 
 		//***********************draw the objects here********************
 
-		if (p1_up)
-		{
-			game.moveOne(-1);
-		}
-		if (p2_up)
-		{
-			game.moveTwo(-1);
-		}
-
-		if (p1_down)
-		{
-
-			game.moveOne(1);
-		}
-		if (p2_down)
-		{
-
-			game.moveTwo(1);
-		}
-
 		if (state == 7 || state == 6)
 		{
+			if (p1_up)
+			{
+				game.moveOne(-1);
+			}
+			if (p2_up)
+			{
+				game.moveTwo(-1);
+			}
+
+			if (p1_down)
+			{
+
+				game.moveOne(1);
+			}
+			if (p2_down)
+			{
+
+				game.moveTwo(1);
+			}
+
 			// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
 			// p.draw();
 			// b.draw();
 			// b.moveBall();
 			// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect1);
 			game.update();
+			int res = game.declareResult();
+			if (res == 1)
+			{
+				state = 8;
+			}
+			else if (res == 2)
+			{
+				state = 8;
+			}
 		}
 		// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &{141, 240, 297, 818}, &{10, 10, 25, 100});
 		//****************************************************************

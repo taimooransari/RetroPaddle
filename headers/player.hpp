@@ -11,7 +11,7 @@ public:
     virtual void movepaddle(int dir) = 0;
     void updateScore() { score++; };
 
-    void operator ++()
+    void operator++()
     {
         score++;
     }
@@ -44,12 +44,11 @@ public:
         // cout<<"move 2"<<endl;
         paddle->movePaddle(dir);
     };
-
 };
 
-// class PC : public Player
-// {
+class PC : public Player
+{
 
-// public:
-//     void movepaddle();
-// };
+public:
+    void movepaddle();
+};
