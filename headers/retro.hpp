@@ -11,6 +11,8 @@ class Retro
     bool isRunning;
     bool isServing = true;
     bool isPC = false;
+    bool onWait = false;
+    int lastHit = 2;
 
 public:
     Retro()
@@ -46,8 +48,8 @@ public:
 
     void update()
     {
-
-        if (isPC)
+        onWait = false;
+        if (isPC && !onWait)
         {
             player_two->decideDirection(ball->getMover());
         }
@@ -57,35 +59,49 @@ public:
         ball->draw();
         if (isServing)
         {
-            ball->setToServe(0);
+            ball->setToServe(lastHit);
             player_one->paddle->setToServe(0);
             player_two->paddle->setToServe(0);
         }
         else
         {
-            // cout << "moving" << endl;
             ball->moveBall();
             int a = ball->collideFromPaddle(player_one->paddle, player_two->paddle);
             int b = ball->isScored();
+            if (b != 0)
+            {
+                lastHit = b;
+            }
+
+            if (isPC)
+            {
+                lastHit = 2;
+            }
+
+            if (a == 2)
+            {
+                onWait = true;
+            }
+            else if (a == 1)
+            {
+                onWait = false;
+            }
 
             if (b > 0)
             {
 
                 if (b == 1)
                 {
-                    // player_one->updateScore();
                     ++(*player_one);
                 }
                 else if (b == 2)
                 {
                     ++(*player_two);
-
-                    // player_two->updateScore();
                 }
 
                 cout << "p1 " << player_one->score << " p2 " << player_two->score << endl;
                 isServing = true;
-
+                onWait = false;
                 SDL_Delay(700);
             }
         }
@@ -110,13 +126,28 @@ public:
 
     void moveOne(int dir)
     {
-        isServing = false;
-        player_one->movepaddle(dir);
+        if (!isServing)
+        {
+            player_one->movepaddle(dir);
+        }
+        if (lastHit == 2)
+        {
+            isServing = false;
+        }
     };
 
     void moveTwo(int dir)
     {
-        // isServing = true;
-        player_two->movepaddle(dir);
+        if (!isPC)
+        {
+            if (!isServing)
+            {
+                player_two->movepaddle(dir);
+            }
+            if (lastHit == 1)
+            {
+                isServing = false;
+            }
+        }
     };
 };

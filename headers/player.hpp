@@ -61,13 +61,17 @@ public:
     void decideDirection(SDL_Rect ballDimensions)
     {
         SDL_Rect padCord = paddle->getMover();
-        if ((ballDimensions.y + (ballDimensions.h) / 2 < padCord.y + (padCord.h) / 3))
+        int odd = rand() % 100 + 1;
+        if (odd >= 30)
         {
-            movepaddle(-1);
-        }
-        else if (ballDimensions.y + (ballDimensions.h) / 2 > padCord.y + (padCord.h) / 1.5)
-        {
-            movepaddle(1);
+            if ((ballDimensions.y + (ballDimensions.h) / 2 < padCord.y + (padCord.h) / 3))
+            {
+                movepaddle(-1);
+            }
+            else if (ballDimensions.y + (ballDimensions.h) / 2 > padCord.y + (padCord.h) / 1.5)
+            {
+                movepaddle(1);
+            }
         }
     };
 }

@@ -127,7 +127,7 @@ public:
     bool onServe = true;
     int dir = 1;
     int vel_X = 6;
-    int vel_Y = -6;
+    int vel_Y = -7;
     Ball() : Object({181, 1419, 215, 215}, {490, 10, 20, 20}){};
 
     void draw()
@@ -144,7 +144,7 @@ public:
     {
 
         SDL_Rect padCord = p1->getMover();
-        if (moverRect.x <= 40)
+        if (moverRect.x >= 35 && moverRect.x <= 40)
         {
 
             if (moverRect.y >= padCord.y && moverRect.y <= padCord.y + padCord.h)
@@ -152,16 +152,16 @@ public:
                 vel_X *= -1;
                 if (moverRect.y <= padCord.y + padCord.h / 3)
                 {
-                    vel_Y = -6;
+                    vel_Y = -7;
                 }
                 else if (moverRect.y <= padCord.y + padCord.h / 1.5)
                 {
 
-                    vel_Y *= rand() % 3 - 1;
+                    vel_Y = 7 * (rand() % 3 - 1);
                 }
                 else
                 {
-                    vel_Y = 6;
+                    vel_Y = 7;
                 }
                 return 1;
             }
@@ -171,16 +171,16 @@ public:
                 vel_X *= -1;
                 if (moverRect.y <= padCord.y + padCord.h / 3)
                 {
-                    vel_Y = -6;
+                    vel_Y = -7;
                 }
                 else if (moverRect.y <= padCord.y + padCord.h / 1.5)
                 {
 
-                    vel_Y *= rand() % 3 - 1;
+                    vel_Y = 7 * (rand() % 3 - 1);
                 }
                 else
                 {
-                    vel_Y = 6;
+                    vel_Y = 7;
                 }
                 return 1;
             }
@@ -188,7 +188,7 @@ public:
             return -1;
         }
 
-        else if (moverRect.x + moverRect.w >= 980)
+        else if (moverRect.x + moverRect.w >= 980 && moverRect.x + moverRect.w <= 985)
         {
             padCord = p2->getMover();
             if (moverRect.y >= padCord.y && moverRect.y <= padCord.y + padCord.h)
@@ -196,16 +196,16 @@ public:
                 vel_X *= -1;
                 if (moverRect.y <= padCord.y + padCord.h / 3)
                 {
-                    vel_Y = -6;
+                    vel_Y = -7;
                 }
                 else if (moverRect.y <= padCord.y + padCord.h / 1.5)
                 {
 
-                    vel_Y *= rand() % 3 - 1;
+                    vel_Y = 7 * (rand() % 3 - 1);
                 }
                 else
                 {
-                    vel_Y = 6;
+                    vel_Y = 7;
                 }
                 return 2;
             }
@@ -215,16 +215,16 @@ public:
                 vel_X *= -1;
                 if (moverRect.y <= padCord.y + padCord.h / 3)
                 {
-                    vel_Y = -6;
+                    vel_Y = -7;
                 }
                 else if (moverRect.y <= padCord.y + padCord.h / 1.5)
                 {
 
-                    vel_Y *= rand() % 3 - 1;
+                    vel_Y = 7 * (rand() % 3 - 1);
                 }
                 else
                 {
-                    vel_Y = 6;
+                    vel_Y = 7;
                 }
                 return 2;
             }
@@ -239,12 +239,13 @@ public:
     {
         if (moverRect.x <= 10)
         {
-
+            setToServe(2);
             return 2;
         }
         else if (moverRect.x >= 980)
         {
 
+            setToServe(1);
             return 1;
         }
         return 0;
@@ -265,18 +266,20 @@ public:
         }
     }
 
-    void setToServe(int side = 0)
+    void setToServe(int lastHit = 2)
     {
         moverRect.y = (720 - moverRect.h) / 2;
-        if (side == 0)
+        if (lastHit == 2)
         {
             moverRect.x = 40;
             vel_X = abs(vel_X);
+            cout << "left" << endl;
         }
-        else
+        else if (lastHit == 1)
         {
-            moverRect.x = 980;
+            moverRect.x = 960;
             vel_X = -1 * abs(vel_X);
+            cout << "right" << endl;
         }
         onServe = true;
     }
