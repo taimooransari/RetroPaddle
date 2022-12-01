@@ -1,5 +1,5 @@
 #include "./headers/game.hpp"
-// #include "window.hpp"
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <stdio.h>
