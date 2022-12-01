@@ -34,9 +34,17 @@ Retro::Retro(int mode, int level, int pad1, int pad2)
 
 Retro::~Retro()
 {
-    //
-    //
-    //
+    ball->~Object();
+    player_one->~Player();
+    player_two->~Player();
+
+    delete player_one;
+    delete player_two;
+    delete ball;
+    player_one = nullptr;
+    player_two = nullptr;
+    ball = nullptr;
+
 }
 
 void Retro::update()

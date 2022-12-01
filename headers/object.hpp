@@ -9,6 +9,7 @@ protected:
 
 public:
     Object(SDL_Rect s, SDL_Rect m);
+    virtual ~Object();
     // {
     //     srcRect = s;
     //     moverRect = m;

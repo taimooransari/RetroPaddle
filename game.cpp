@@ -193,7 +193,7 @@ void Game::run()
 {
 	bool quit = false;
 	SDL_Event e;
-	Retro game;
+	Retro* game;
 	bool p1_up = false, p1_down = false, p2_up = false, p2_down = false;
 	int mode;
 	int level;
@@ -268,7 +268,7 @@ void Game::run()
 					{
 						level = 1;
 						state = 6;
-						game = Retro(mode, level, 3, 3);
+						game = new Retro(mode, level, 3, 3);
 					}
 					// mode 2 p1 = 1
 					else if (state == 4)
@@ -279,7 +279,7 @@ void Game::run()
 					else if (state == 5)
 					{
 						state = 7;
-						game = Retro(mode, level, p1_pad, p2_pad);
+						game = new Retro(mode, level, p1_pad, p2_pad);
 					}
 
 					break;
@@ -314,14 +314,14 @@ void Game::run()
 						p2_pad = 2;
 						state = 7;
 
-						game = Retro(mode, level, p1_pad, p2_pad);
+						game =new Retro(mode, level, p1_pad, p2_pad);
 					}
 					// mode 1 level 2
 					else if (state == 3)
 					{
 						level = 2;
 						state = 6;
-						game = Retro(mode, level, 3, 3);
+						game = new Retro(mode, level, 3, 3);
 					}
 					break;
 				case SDLK_3:
@@ -337,7 +337,7 @@ void Game::run()
 						level = 3;
 						state = 6;
 
-						game = Retro(mode, level, 3, 3);
+						game = new Retro(mode, level, 3, 3);
 					}
 					// mode 2 p1 = 2
 					else if (state == 4)
@@ -351,7 +351,7 @@ void Game::run()
 						p2_pad = 3;
 						state = 7;
 
-						game = Retro(mode, level, p1_pad, p2_pad);
+						game = new Retro(mode, level, p1_pad, p2_pad);
 					}
 					break;
 				case SDLK_e:
@@ -474,22 +474,22 @@ void Game::run()
 		{
 			if (p1_up)
 			{
-				game.moveOne(-1);
+				game->moveOne(-1);
 			}
 			if (p2_up)
 			{
-				game.moveTwo(-1);
+				game->moveTwo(-1);
 			}
 
 			if (p1_down)
 			{
 
-				game.moveOne(1);
+				game->moveOne(1);
 			}
 			if (p2_down)
 			{
 
-				game.moveTwo(1);
+				game->moveTwo(1);
 			}
 
 			// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
@@ -497,8 +497,8 @@ void Game::run()
 			// b.draw();
 			// b.moveBall();
 			// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect1);
-			game.update();
-			int res = game.declareResult();
+			game->update();
+			int res = game->declareResult();
 			if (res == 1)
 			{
 				state = 8;
@@ -515,4 +515,5 @@ void Game::run()
 
 		// SDL_Delay(100); // causes sdl engine to delay for specified miliseconds
 	}
+	game->~Retro();
 }

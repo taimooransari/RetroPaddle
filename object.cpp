@@ -14,6 +14,8 @@ SDL_Rect Object::getMover() { return moverRect; };
 void Object::setToServe(int side) { moverRect.y = (720 - moverRect.h) / 2; }
 int Object::collideFromPaddle(Object *p1, Object *p2) { return 0; }
 
+Object::~Object() {}
+
 // paddle
 Paddle::Paddle(SDL_Rect s, SDL_Rect m) : Object(s, m){};
 

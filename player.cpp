@@ -3,6 +3,13 @@
 
 using namespace std;
 
+Player::~Player()
+{
+    paddle->~Object();
+    delete paddle;
+
+};
+
 void Player::operator++()
 {
     score++;

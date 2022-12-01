@@ -8,6 +8,7 @@ public:
     int score = 0;
 
     Player(){};
+    virtual ~Player();
     virtual void movepaddle(int dir) = 0;
     // void updateScore() { score++; };
     virtual void decideDirection(SDL_Rect ballDimension){};
