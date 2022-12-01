@@ -6,6 +6,9 @@
 using namespace std;
 SDL_Renderer *Drawing::gRenderer = NULL;
 SDL_Texture *Drawing::assets = NULL;
+SDL_Texture *Drawing::scoreAsset = NULL;
+
+
 Mix_Chunk *Drawing::gLeft = NULL;
 Mix_Chunk *Drawing::gRight = NULL;
 Mix_Chunk *Drawing::gButton = NULL;
@@ -81,6 +84,7 @@ bool Game::loadMedia()
 	// Loading success flag
 	bool success = true;
 	Drawing::assets = loadTexture("./assets/paddles.png");
+	Drawing::scoreAsset = loadTexture("./assets/score.png");
 
 	gTexture = loadTexture("./assets/main.png");
 
@@ -191,9 +195,10 @@ SDL_Texture *Game::loadTexture(std::string path)
 }
 void Game::run()
 {
+	bool wasStarted = false;
 	bool quit = false;
 	SDL_Event e;
-	Retro* game;
+	Retro *game;
 	bool p1_up = false, p1_down = false, p2_up = false, p2_down = false;
 	int mode;
 	int level;
@@ -269,6 +274,7 @@ void Game::run()
 						level = 1;
 						state = 6;
 						game = new Retro(mode, level, 3, 3);
+						wasStarted = true;
 					}
 					// mode 2 p1 = 1
 					else if (state == 4)
@@ -280,6 +286,7 @@ void Game::run()
 					{
 						state = 7;
 						game = new Retro(mode, level, p1_pad, p2_pad);
+						wasStarted = true;
 					}
 
 					break;
@@ -314,7 +321,8 @@ void Game::run()
 						p2_pad = 2;
 						state = 7;
 
-						game =new Retro(mode, level, p1_pad, p2_pad);
+						game = new Retro(mode, level, p1_pad, p2_pad);
+						wasStarted = true;
 					}
 					// mode 1 level 2
 					else if (state == 3)
@@ -322,6 +330,7 @@ void Game::run()
 						level = 2;
 						state = 6;
 						game = new Retro(mode, level, 3, 3);
+						wasStarted = true;
 					}
 					break;
 				case SDLK_3:
@@ -338,6 +347,7 @@ void Game::run()
 						state = 6;
 
 						game = new Retro(mode, level, 3, 3);
+						wasStarted = true;
 					}
 					// mode 2 p1 = 2
 					else if (state == 4)
@@ -352,6 +362,7 @@ void Game::run()
 						state = 7;
 
 						game = new Retro(mode, level, p1_pad, p2_pad);
+						wasStarted = true;
 					}
 					break;
 				case SDLK_e:
@@ -513,5 +524,9 @@ void Game::run()
 
 		// SDL_Delay(100); // causes sdl engine to delay for specified miliseconds
 	}
-	game->~Retro();
+	if (wasStarted)
+	{
+		game->~Retro();
+		wasStarted = false;
+	}
 }

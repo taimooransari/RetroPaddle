@@ -8,7 +8,7 @@ public:
     static SDL_Renderer *gRenderer;
     // global reference to png image sheets
     static SDL_Texture *assets;
-
+ static SDL_Texture *scoreAsset;
     // bg music
     static Mix_Music *gMusic;
 

@@ -57,6 +57,9 @@ void Retro::update()
     player_one->paddle->draw();
     player_two->paddle->draw();
     ball->draw();
+
+    player_one->viewScore(1);
+    player_two->viewScore(2);
     if (isServing)
     {
         ball->setToServe(lastHit);
@@ -98,8 +101,6 @@ void Retro::update()
             {
                 ++(*player_two);
             }
-            cout << player_one->score << " p1 " << endl;
-            cout << player_two->score << " p2 " << endl;
             isServing = true;
             onWait = false;
             SDL_Delay(700);
