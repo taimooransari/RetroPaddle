@@ -7,7 +7,6 @@ Retro::Retro()
     player_two = new PC();
     ball = new Ball();
     isServing = true;
-    // bool isServing = true;
     isPC = true;
     onWait = false;
     lastHit = 2;
@@ -23,6 +22,7 @@ Retro::Retro(int mode, int level, int pad1, int pad2)
     player_one = new HumanPlayer(1, pad1);
     if (mode == 2)
     {
+        isPC = false;
         player_two = new HumanPlayer(2, pad2);
     }
     else
@@ -32,10 +32,11 @@ Retro::Retro(int mode, int level, int pad1, int pad2)
     }
 }
 
-Retro::~Retro(){
-    // 
-    // 
-    // 
+Retro::~Retro()
+{
+    //
+    //
+    //
 }
 
 void Retro::update()
@@ -130,14 +131,18 @@ void Retro::moveOne(int dir)
 
 void Retro::moveTwo(int dir)
 {
+    cout << 1 << endl;
     if (!isPC)
     {
+        cout << 2 << endl;
         if (!isServing)
         {
+            cout << 3 << endl;
             player_two->movepaddle(dir);
         }
         if (lastHit == 1)
         {
+            cout << 4 << endl;
             isServing = false;
         }
     }
