@@ -193,21 +193,8 @@ void Game::run()
 {
 	bool quit = false;
 	SDL_Event e;
-
-	// // test start
-	// SDL_Rect srcRect, moverRect, moverRect1;
-
-	// // paddles
-	// Paddle p;
-	// Ball b;
-	// srcRect = {141, 240, 297, 818};
-	// moverRect = {10, 10, 50, 150};
-	// moverRect1 = {955, 10, 50, 150};
 	Retro game;
-
 	bool p1_up = false, p1_down = false, p2_up = false, p2_down = false;
-
-	// init data
 	int mode;
 	int level;
 	int p1_pad;
@@ -366,6 +353,11 @@ void Game::run()
 
 						game = Retro(mode, level, p1_pad, p2_pad);
 					}
+					break;
+				case SDLK_e:
+
+					Mix_PlayChannel(-1, Drawing::gButton, 0);
+					quit = true;
 					break;
 				case SDLK_r:
 
