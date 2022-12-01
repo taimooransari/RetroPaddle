@@ -516,10 +516,12 @@ void Game::run()
 			int res = game->declareResult();
 			if (res == 1)
 			{
+				winner = 1;
 				state = 8;
 			}
 			else if (res == 2)
 			{
+				winner = 2;
 				state = 8;
 			}
 		}
