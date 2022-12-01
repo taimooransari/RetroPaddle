@@ -44,7 +44,6 @@ Retro::~Retro()
     player_one = nullptr;
     player_two = nullptr;
     ball = nullptr;
-
 }
 
 void Retro::update()
@@ -99,8 +98,8 @@ void Retro::update()
             {
                 ++(*player_two);
             }
-
-            cout << "p1 " << player_one->score << " p2 " << player_two->score << endl;
+            cout << player_one->score << " p1 " << endl;
+            cout << player_two->score << " p2 " << endl;
             isServing = true;
             onWait = false;
             SDL_Delay(700);
@@ -116,7 +115,7 @@ int Retro::declareResult()
 
         return 1;
     }
-    else if (player_one->score >= 10)
+    else if (player_two->score >= 10)
     {
 
         return 2;
@@ -139,18 +138,14 @@ void Retro::moveOne(int dir)
 
 void Retro::moveTwo(int dir)
 {
-    cout << 1 << endl;
     if (!isPC)
     {
-        cout << 2 << endl;
         if (!isServing)
         {
-            cout << 3 << endl;
             player_two->movepaddle(dir);
         }
         if (lastHit == 1)
         {
-            cout << 4 << endl;
             isServing = false;
         }
     }

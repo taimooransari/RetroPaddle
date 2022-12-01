@@ -369,13 +369,11 @@ void Game::run()
 					}
 					break;
 				case SDLK_p:
-					cout << "P" << endl;
 					p2_up = true;
 					p2_down = false;
 					break;
 				case SDLK_l:
 
-					cout << "L" << endl;
 					p2_up = false;
 					p2_down = true;
 					break;
