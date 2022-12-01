@@ -14,16 +14,11 @@ class Game
     const int SCREEN_WIDTH = 680 * 1.5;
     const int SCREEN_HEIGHT = 480 * 1.5;
 
-    // vector <SDL_Window*> winds;
-
     // The window we'll be rendering to
     SDL_Window *gWindow = NULL;
 
     // Current displayed texture
     SDL_Texture *gTexture = NULL;
-
-    // Current displayed texture
-    // SDL_Texture *paddleTexture = NULL;
 
     int state = 0;
 
@@ -39,9 +34,14 @@ class Game
     //  6 for 1player match
     // 7 for 2payer match
 public:
+    // initialization function
     bool init();
+    // load all the media beforehand
     bool loadMedia();
+    // close window and free space
     void close();
+    // load textures
     SDL_Texture *loadTexture(std::string path);
+    // run the game module
     void run();
 };

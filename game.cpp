@@ -4,6 +4,8 @@
 #include <iostream>
 #include <SDL_mixer.h>
 using namespace std;
+
+// Static functions and attributes drom Drawing Class
 SDL_Renderer *Drawing::gRenderer = NULL;
 SDL_Texture *Drawing::assets = NULL;
 SDL_Texture *Drawing::scoreAsset = NULL;
@@ -14,13 +16,12 @@ Mix_Chunk *Drawing::gButton = NULL;
 Mix_Chunk *Drawing::gScore = NULL;
 Mix_Music *Drawing::gMusic = NULL;
 
+// Initialize the windows
 bool Game::init()
 {
 	// Initialization flag
 	bool success = true;
 
-	// obj = Object();
-	// Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 	{
 		printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
@@ -44,8 +45,6 @@ bool Game::init()
 		else
 		{
 
-			// Create renderer for window
-			// Drawing::gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 			Drawing::gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 			if (Drawing::gRenderer == NULL)
@@ -78,6 +77,7 @@ bool Game::init()
 	return success;
 }
 
+// Load all the media
 bool Game::loadMedia()
 {
 	// Loading success flag
@@ -136,21 +136,21 @@ bool Game::loadMedia()
 	return success;
 }
 
+// Close the game
 void Game::close()
 {
 	// Free loaded images
-
 	SDL_DestroyTexture(gTexture);
 
 	// Free the sound effects
 	Mix_FreeChunk(Drawing::gLeft);
 	Mix_FreeChunk(Drawing::gRight);
 	Mix_FreeChunk(Drawing::gButton);
-	// Mix_FreeChunk(Drawing::gScore);
+	Mix_FreeChunk(Drawing::gScore);
 	Drawing::gLeft = NULL;
 	Drawing::gRight = NULL;
 	Drawing::gButton = NULL;
-	// Drawing::gScore = NULL;
+	Drawing::gScore = NULL;
 
 	// Free the music
 	Mix_FreeMusic(Drawing::gMusic);
@@ -161,11 +161,13 @@ void Game::close()
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 	Drawing::gRenderer = NULL;
+
 	// Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit();
 }
 
+// Load the textures / SDL
 SDL_Texture *Game::loadTexture(std::string path)
 {
 	// The final texture
@@ -192,6 +194,8 @@ SDL_Texture *Game::loadTexture(std::string path)
 
 	return newTexture;
 }
+
+// Run the game
 void Game::run()
 {
 	bool wasStarted = false;
@@ -250,6 +254,7 @@ void Game::run()
 						}
 					}
 					break;
+
 				case SDLK_1:
 
 					if (state <= 5)
@@ -290,6 +295,7 @@ void Game::run()
 					}
 
 					break;
+
 				case SDLK_2:
 
 					if (state <= 5)
@@ -333,6 +339,7 @@ void Game::run()
 						wasStarted = true;
 					}
 					break;
+
 				case SDLK_3:
 
 					if (state <= 5)
@@ -360,31 +367,35 @@ void Game::run()
 					{
 						p2_pad = 3;
 						state = 7;
-
 						game = new Retro(mode, level, p1_pad, p2_pad);
 						wasStarted = true;
 					}
 					break;
+
 				case SDLK_e:
-
-					Mix_PlayChannel(-1, Drawing::gButton, 0);
-					quit = true;
+					// exit the game
+					if (state == 8)
+					{
+						Mix_PlayChannel(-1, Drawing::gButton, 0);
+						quit = true;
+					}
 					break;
-				case SDLK_r:
 
+				case SDLK_r:
+					// restart the game
 					if (state == 8)
 					{
 						state = 0;
-
 						Mix_PlayChannel(-1, Drawing::gButton, 0);
 					}
 					break;
+
 				case SDLK_p:
 					p2_up = true;
 					p2_down = false;
 					break;
-				case SDLK_l:
 
+				case SDLK_l:
 					p2_up = false;
 					p2_down = true;
 					break;
@@ -393,10 +404,12 @@ void Game::run()
 					p1_up = true;
 					p1_down = false;
 					break;
+
 				case SDLK_s:
 					p1_up = false;
 					p1_down = true;
 					break;
+
 				case SDLK_b:
 					if (state == 1 || state == 2)
 					{
@@ -438,52 +451,60 @@ void Game::run()
 				}
 			}
 		}
-
+		// Destroy old texture
 		SDL_DestroyTexture(gTexture);
+		// Main/Splash Screen
 		if (state == 0)
 		{
 			gTexture = loadTexture("./assets/main.png");
 		}
+		// Instruuction Screen
 		else if (state == 1)
 		{
 			gTexture = loadTexture("./assets/instructions.png");
 		}
+		// Modes Screen
 		else if (state == 2)
 		{
 			gTexture = loadTexture("./assets/mode.png");
 		}
+		// Choose 1 Player Mode difficulty level
 		else if (state == 3)
 		{
 			gTexture = loadTexture("./assets/levels.png");
 		}
+		// Choose player 1 paddle
 		else if (state == 4)
 		{
 			gTexture = loadTexture("./assets/player1paddles.png");
 		}
+		// Choose player 2 paddle
 		else if (state == 5)
 		{
 			gTexture = loadTexture("./assets/player2paddles.png");
 		}
+		// Game Screen
 		else if (state == 7 || state == 6)
 		{
 			gTexture = loadTexture("./assets/game.png");
 		}
+		// Result Screen
 		else if (state == 8)
 		{
+			// Player 1 winner
 			if (winner == 1)
 			{
 				gTexture = loadTexture("./assets/winplayer1.png");
 			}
+			// Player 2 winner
 			else if (winner == 2)
 			{
 				gTexture = loadTexture("./assets/winplayer2.png");
 			}
 		}
-
-		SDL_RenderClear(Drawing::gRenderer); // removes everything from renderer
+		// removes everything from renderer
+		SDL_RenderClear(Drawing::gRenderer);
 		SDL_RenderCopy(Drawing::gRenderer, gTexture, NULL, NULL);
-
-		//***********************draw the objects here********************
 
 		if (state == 7 || state == 6)
 		{
@@ -507,11 +528,6 @@ void Game::run()
 				game->moveTwo(1);
 			}
 
-			// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
-			// p.draw();
-			// b.draw();
-			// b.moveBall();
-			// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect1);
 			game->update();
 			int res = game->declareResult();
 			if (res == 1)
@@ -525,13 +541,13 @@ void Game::run()
 				state = 8;
 			}
 		}
-		// SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &{141, 240, 297, 818}, &{10, 10, 25, 100});
 		//****************************************************************
 
 		SDL_RenderPresent(Drawing::gRenderer); // displays the updated renderer
 
 		// SDL_Delay(100); // causes sdl engine to delay for specified miliseconds
 	}
+	// Reset game states
 	if (wasStarted)
 	{
 		game->~Retro();

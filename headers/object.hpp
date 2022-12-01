@@ -2,126 +2,106 @@
 #include <SDL.h>
 #include "./drawing.hpp"
 using namespace std;
+
+// Object Class / Abstract Base Class for Paddle and Ball
 class Object
 {
 protected:
     SDL_Rect srcRect, moverRect;
 
 public:
+    // Overloaded Constructor
     Object(SDL_Rect s, SDL_Rect m);
+
+    // virtual Destructor to be used by derived class
     virtual ~Object();
-    // {
-    //     srcRect = s;
-    //     moverRect = m;
-    // };
 
+    // virtual function to be overridden by Ball Class
     virtual int isScored() { return 0; };
-    virtual void collideFromWall(){};
-    virtual int collideFromPaddle(Object *p1, Object *p2); // { return 0; };
-    SDL_Rect getMover();                                   // { return moverRect; };
 
-    virtual void setToServe(int); //{ moverRect.y = (720 - moverRect.h) / 2;}
+    // virtual function to be overridden by Ball Class
+    virtual void collideFromWall(){};
+
+    // virtual function to be overridden by Ball Class
+    virtual int collideFromPaddle(Object *p1, Object *p2);
+
+    // Returns the moverRect cordinates of the object
+    SDL_Rect getMover();
+
+    // set the object to its serve position
+    virtual void setToServe(int);
+
+    // move the paddle along y-axis
     virtual void movePaddle(int){};
+
+    // move the ball along x and y - axis
     virtual void moveBall(){};
+
+    // pure virtual function to draw each object
     virtual void draw() = 0;
 };
 
+
+// Paddle Class -> Derived from Object Class
+// Paddle Class / Abstract Base Class for Paddle Types
 class Paddle : public Object
 {
 public:
-    Paddle(SDL_Rect s, SDL_Rect m); //: Object(s, m){};
+    // Overloaded Paddle constructor
+    Paddle(SDL_Rect s, SDL_Rect m);
 
+    // pure virtual function to be implemented by paddle types
     virtual void draw() = 0;
 
+    // move the paddle according to the direction in parameters
     void movePaddle(int dir);
-    // {
-
-    //     moverRect.y += 4 * dir;
-    //     if (moverRect.y <= 10)
-    //     {
-    //         moverRect.y = 10;
-    //     }
-    //     if (moverRect.y >= 700 - moverRect.h)
-    //     {
-    //         moverRect.y = 700 - moverRect.h;
-    //     }
-    // }
 };
 
-// regular = {141,240,297,818}
-// fast = {559, 240, 297, 818}
-// long = {977,240,297,1090}
-
+// RegularPaddle Class, paddle has a moderate length and speed.
 class RegularPaddle : public Paddle
 {
 public:
-    RegularPaddle(int side = 1, SDL_Rect s = {141, 240, 297, 818}, SDL_Rect m = {10, 315, 30, 90}); //: Paddle(s, m)
-    // {
-    //     moverRect.y = (720 - moverRect.h) / 2;
-    //     if (side == 2)
-    //     {
-    //         moverRect.x = 980;
-    //     }
-    // }
+    // Overloaded RegularPaddle constructor
+    RegularPaddle(int side = 1, SDL_Rect s = {141, 240, 297, 818}, SDL_Rect m = {10, 315, 30, 90});
+
+    // Using SDL Function to render the paddle
     void draw();
-    // {
-    //     SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
-    // };
+
+    // move the paddle along y-axis
     void movePaddle(int);
-    // {
-    //     Paddle::movePaddle((int)(dir * 2));
-    // }
 };
 
+// SpeedPaddle Class, paddle has a short length and fast speed.
 class SpeedPaddle : public Paddle
 {
 
 public:
+    // Overloaded RegularPaddle constructor
     SpeedPaddle(int side = 1, SDL_Rect s = {559, 240, 297, 818}, SDL_Rect m = {10, 315, 30, 70});
-    //  : Paddle(s, m)
-    // {
-    //     moverRect.y = (720 - moverRect.h) / 2;
-    //     if (side == 2)
-    //     {
-    //         moverRect.x = 980;
-    //     }
-    // }
-    void draw();
-    // {
-    //     SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
-    // };
-    void movePaddle(int);
-    // {
 
-    //     Paddle::movePaddle((int)(dir * 3));
-    // }
+    // Using SDL Function to render the paddle
+    void draw();
+
+    // move the paddle along y-axis
+    void movePaddle(int);
 };
 
+// SpeedPaddle Class, paddle has a long length and slow speed.
 class LongPaddle : public Paddle
 {
 
 public:
-    LongPaddle(int side = 1, SDL_Rect s = {977, 240, 297, 1090}, SDL_Rect m = {10, 300, 30, 90}); //: Paddle(s, m)
-    // {
-    //     moverRect.h = 120;
-    //     moverRect.y = (720 - moverRect.h) / 2;
-    //     if (side == 2)
-    //     {
-    //         moverRect.x = 980;
-    //     }
-    // }
+    // Overloaded RegularPaddle constructor
+    LongPaddle(int side = 1, SDL_Rect s = {977, 240, 297, 1090}, SDL_Rect m = {10, 300, 30, 90});
+
+    // Using SDL Function to render the paddle
     void draw();
-    // {
-    //     SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
-    // };
 
+    // move the paddle along y-axis
     void movePaddle(int);
-    // {
-
-    //     Paddle::movePaddle((int)(dir));
-    // }
 };
 
+// Ball Class -> Derived from Object Class
 class Ball : public Object
 {
 protected:
@@ -131,213 +111,18 @@ protected:
     int vel_Y;
 
 public:
-    Ball(); //: Object({181, 1419, 215, 215}, {490, 10, 20, 20}){};
-
+    // Default constructor
+    Ball();
+    // Draw the Ball using SDL Reder functions
     void draw();
-    // {
-    //     SDL_RenderCopy(Drawing::gRenderer, Drawing::assets, &srcRect, &moverRect);
-    // };
-
+    // Collide the ball from top and bottom walls
     void collideFromWall();
-    // {
-    //     vel_Y *= -1;
-    //     int rnd = rand() % 2;
-    //     if (rnd == 0)
-    //     {
-    //         Mix_PlayChannel(-1, Drawing::gLeft, 0);
-    //     }
-    //     else
-    //     {
-
-    //         Mix_PlayChannel(-1, Drawing::gRight, 0);
-    //     }
-    // }
-
+    // Collide from the paddles
     int collideFromPaddle(Object *p1, Object *p2);
-    // {
-
-    //     SDL_Rect padCord = p1->getMover();
-    //     if (moverRect.x >= 35 && moverRect.x <= 40)
-    //     {
-
-    //         if (moverRect.y >= padCord.y && moverRect.y <= padCord.y + padCord.h)
-    //         {
-    //             vel_X *= -1;
-    //             if (moverRect.y <= padCord.y + padCord.h / 3)
-    //             {
-    //                 vel_Y = -7;
-    //             }
-    //             else if (moverRect.y <= padCord.y + padCord.h / 1.5)
-    //             {
-
-    //                 vel_Y = 7 * (rand() % 3 - 1);
-    //             }
-    //             else
-    //             {
-    //                 vel_Y = 7;
-    //             }
-
-    //             int rnd = rand() % 2;
-    //             if (rnd == 0)
-    //             {
-    //                 Mix_PlayChannel(-1, Drawing::gLeft, 0);
-    //             }
-    //             else
-    //             {
-
-    //                 Mix_PlayChannel(-1, Drawing::gRight, 0);
-    //             }
-    //             return 1;
-    //         }
-    //         else if (moverRect.y + moverRect.h >= padCord.y && moverRect.y + moverRect.h <= padCord.y + padCord.h)
-    //         {
-
-    //             vel_X *= -1;
-    //             if (moverRect.y <= padCord.y + padCord.h / 3)
-    //             {
-    //                 vel_Y = -7;
-    //             }
-    //             else if (moverRect.y <= padCord.y + padCord.h / 1.5)
-    //             {
-
-    //                 vel_Y = 7 * (rand() % 3 - 1);
-    //             }
-    //             else
-    //             {
-    //                 vel_Y = 7;
-    //             }
-
-    //             int rnd = rand() % 2;
-    //             if (rnd == 0)
-    //             {
-    //                 Mix_PlayChannel(-1, Drawing::gLeft, 0);
-    //             }
-    //             else
-    //             {
-
-    //                 Mix_PlayChannel(-1, Drawing::gRight, 0);
-    //             }
-    //             return 1;
-    //         }
-
-    //         return -1;
-    //     }
-
-    //     else if (moverRect.x + moverRect.w >= 980 && moverRect.x + moverRect.w <= 985)
-    //     {
-    //         padCord = p2->getMover();
-    //         if (moverRect.y >= padCord.y && moverRect.y <= padCord.y + padCord.h)
-    //         {
-    //             vel_X *= -1;
-    //             if (moverRect.y <= padCord.y + padCord.h / 3)
-    //             {
-    //                 vel_Y = -7;
-    //             }
-    //             else if (moverRect.y <= padCord.y + padCord.h / 1.5)
-    //             {
-
-    //                 vel_Y = 7 * (rand() % 3 - 1);
-    //             }
-    //             else
-    //             {
-    //                 vel_Y = 7;
-    //             }
-
-    //             int rnd = rand() % 2;
-    //             if (rnd == 0)
-    //             {
-    //                 Mix_PlayChannel(-1, Drawing::gLeft, 0);
-    //             }
-    //             else
-    //             {
-
-    //                 Mix_PlayChannel(-1, Drawing::gRight, 0);
-    //             }
-    //             return 2;
-    //         }
-    //         else if (moverRect.y + moverRect.h >= padCord.y && moverRect.y + moverRect.h <= padCord.y + padCord.h)
-    //         {
-
-    //             vel_X *= -1;
-    //             if (moverRect.y <= padCord.y + padCord.h / 3)
-    //             {
-    //                 vel_Y = -7;
-    //             }
-    //             else if (moverRect.y <= padCord.y + padCord.h / 1.5)
-    //             {
-
-    //                 vel_Y = 7 * (rand() % 3 - 1);
-    //             }
-    //             else
-    //             {
-    //                 vel_Y = 7;
-    //             }
-    //             int rnd = rand() % 2;
-    //             if (rnd == 0)
-    //             {
-    //                 Mix_PlayChannel(-1, Drawing::gLeft, 0);
-    //             }
-    //             else
-    //             {
-
-    //                 Mix_PlayChannel(-1, Drawing::gRight, 0);
-    //             }
-    //             return 2;
-    //         }
-
-    //         return -1;
-    //     }
-
-    //     return 0;
-    // }
-
+    // Check if there is either of the player scored
     int isScored();
-    // {
-    //     if (moverRect.x <= 10)
-    //     {
-    //         Mix_PlayChannel(-1, Drawing::gScore, 0);
-
-    //         setToServe(2);
-    //         return 2;
-    //     }
-    //     else if (moverRect.x >= 980)
-    //     {
-
-    //         Mix_PlayChannel(-1, Drawing::gScore, 0);
-    //         setToServe(1);
-    //         return 1;
-    //     }
-    //     return 0;
-    // }
-
+    // move the ball along x and y axis
     void moveBall();
-    // {
-    //     // if (moverRect.x >= 10 && moverRect.x <= 980)
-    //     // {
-    //     moverRect.x += vel_X;
-    //     moverRect.y += vel_Y;
-    //     // }
-
-    //     if (moverRect.y <= 10 || moverRect.y >= 700 - moverRect.h)
-    //     {
-
-    //         collideFromWall();
-    //     }
-    // }
-
+    // set the ball to serve position according to the lastHit i.e. who hit the ball last
     void setToServe(int lastHit = 2);
-    // {
-    //     moverRect.y = (720 - moverRect.h) / 2;
-    //     if (lastHit == 2)
-    //     {
-    //         moverRect.x = 40;
-    //         vel_X = abs(vel_X);
-    //     }
-    //     else if (lastHit == 1)
-    //     {
-    //         moverRect.x = 960;
-    //         vel_X = -1 * abs(vel_X);
-    //     }
-    //     onServe = true;
-    // }
 };

@@ -1,27 +1,20 @@
-// #pragma once
-// #include <SDL.h>
 #include "./headers/object.hpp"
 
-// object
+// OBJECT CLASS IMPLEMENTATIONS
 Object::Object(SDL_Rect s, SDL_Rect m)
 {
     srcRect = s;
     moverRect = m;
 };
-
 SDL_Rect Object::getMover() { return moverRect; };
-
 void Object::setToServe(int side) { moverRect.y = (720 - moverRect.h) / 2; }
 int Object::collideFromPaddle(Object *p1, Object *p2) { return 0; }
-
 Object::~Object() {}
 
-// paddle
+// PADDLE CLASS IMPLEMENTATIONS
 Paddle::Paddle(SDL_Rect s, SDL_Rect m) : Object(s, m){};
-
 void Paddle::movePaddle(int dir)
 {
-
     moverRect.y += 4 * dir;
     if (moverRect.y <= 10)
     {
@@ -33,8 +26,7 @@ void Paddle::movePaddle(int dir)
     }
 }
 
-// reg pad
-
+// REGULAR PADDLE CLASS IMPLEMENTATIONS
 RegularPaddle::RegularPaddle(int side, SDL_Rect s, SDL_Rect m) : Paddle(s, m)
 {
     moverRect.y = (720 - moverRect.h) / 2;
@@ -53,8 +45,7 @@ void RegularPaddle::movePaddle(int dir)
     Paddle::movePaddle((int)(dir * 2));
 }
 
-// speed pad
-
+// SPEED PADDLE CLASS IMPLEMENTATIONS
 SpeedPaddle::SpeedPaddle(int side, SDL_Rect s, SDL_Rect m) : Paddle(s, m)
 {
     moverRect.y = (720 - moverRect.h) / 2;
@@ -73,8 +64,7 @@ void SpeedPaddle::movePaddle(int dir)
     Paddle::movePaddle((int)(dir * 3));
 }
 
-// long paddle
-
+// LONG PADDLE CLASS IMPLEMENTATIONS
 LongPaddle::LongPaddle(int side, SDL_Rect s, SDL_Rect m) : Paddle(s, m)
 {
     moverRect.h = 120;
@@ -95,8 +85,7 @@ void LongPaddle::movePaddle(int dir)
     Paddle::movePaddle((int)(dir));
 }
 
-// balll
-
+// BALL CLASS IMPLEMENTATIONS
 Ball::Ball() : Object({181, 1419, 215, 215}, {490, 10, 20, 20})
 {
 
