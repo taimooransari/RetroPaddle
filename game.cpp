@@ -8,7 +8,6 @@ SDL_Renderer *Drawing::gRenderer = NULL;
 SDL_Texture *Drawing::assets = NULL;
 SDL_Texture *Drawing::scoreAsset = NULL;
 
-
 Mix_Chunk *Drawing::gLeft = NULL;
 Mix_Chunk *Drawing::gRight = NULL;
 Mix_Chunk *Drawing::gButton = NULL;
@@ -204,6 +203,7 @@ void Game::run()
 	int level;
 	int p1_pad;
 	int p2_pad;
+	int winner = 0;
 	// test end
 
 	// Play the music
@@ -470,8 +470,14 @@ void Game::run()
 		}
 		else if (state == 8)
 		{
-
-			gTexture = loadTexture("./assets/game_over.png");
+			if (winner == 1)
+			{
+				gTexture = loadTexture("./assets/winplayer1.png");
+			}
+			else if (winner == 2)
+			{
+				gTexture = loadTexture("./assets/winplayer2.png");
+			}
 		}
 
 		SDL_RenderClear(Drawing::gRenderer); // removes everything from renderer
@@ -527,6 +533,7 @@ void Game::run()
 	if (wasStarted)
 	{
 		game->~Retro();
+		winner = 0;
 		wasStarted = false;
 	}
 }
