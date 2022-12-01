@@ -1,6 +1,8 @@
 #include "./headers/retro.hpp"
 #include <iostream>
 using namespace std;
+
+// RETRO CLASS IMPLEMENTATION
 Retro::Retro()
 {
     player_one = new HumanPlayer(1, 3);
