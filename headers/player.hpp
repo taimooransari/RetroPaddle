@@ -7,7 +7,7 @@ class Player
 
 public:
     Object *paddle;
-    int score = 0;
+    int score ;
     SDL_Rect src;
     SDL_Rect mov ;//= {450, 20, 40, 40};
 

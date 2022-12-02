@@ -7,6 +7,7 @@ using namespace std;
 // PLAYER CLASS IMPLEMENTATION
 Player::Player()
 {
+    score = 0;
     mov = {450, 20, 40, 40};
 }
 
