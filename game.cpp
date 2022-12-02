@@ -201,7 +201,7 @@ void Game::run()
 	bool wasStarted = false;
 	bool quit = false;
 	SDL_Event e;
-	Retro *game;
+	// Retro *game;
 	bool p1_up = false, p1_down = false, p2_up = false, p2_down = false;
 	int mode;
 	int level;
@@ -290,6 +290,7 @@ void Game::run()
 					else if (state == 5)
 					{
 						state = 7;
+						p2_pad = 1;
 						game = new Retro(mode, level, p1_pad, p2_pad);
 						wasStarted = true;
 					}

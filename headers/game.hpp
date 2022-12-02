@@ -7,6 +7,7 @@
 #include <time.h>
 #include <vector>
 #include "./object.hpp"
+#include "./retro.hpp"
 #include "./drawing.hpp"
 class Game
 {
@@ -19,7 +20,7 @@ class Game
 
     // Current displayed texture
     SDL_Texture *gTexture = NULL;
-
+    Retro *game;
     int state = 0;
 
     bool gameRunning = false;
